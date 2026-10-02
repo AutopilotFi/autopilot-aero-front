@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autopilot · Your Aerodrome LP, on auto-rebalancing</title>
+<meta name="description" content="Put your Aerodrome LP position on Autopilot in one click. Auto-rebalancing works to keep it in range, swap fees compound into your position, and AERO rewards stay yours to claim. Non-custodial, withdraw anytime.">
+<meta name="theme-color" content="#1F55F0">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<!-- Social previews: absolute URLs; update when moving to autopilot.finance. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Autopilot by Harvest">
+<meta property="og:title" content="Aerodrome Liquidity. On Autopilot.">
+<meta property="og:description" content="One click to put your Aerodrome LP on auto-rebalancing. Fees compound, AERO rewards stay yours. Non-custodial, withdraw anytime.">
+<meta property="og:url" content="https://autopilot-aero-landing.vercel.app/">
+<meta property="og:image" content="https://autopilot-aero-landing.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Autopilot: Aerodrome Liquidity. On Autopilot. A pixel chart of a WETH/USDC position staying in range.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aerodrome Liquidity. On Autopilot.">
+<meta name="twitter:description" content="One click to put your Aerodrome LP on auto-rebalancing. Fees compound, AERO rewards stay yours.">
+<meta name="twitter:image" content="https://autopilot-aero-landing.vercel.app/assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#FAFAFC;--surface:#FFFFFF;--surface-2:#F4F5F8;--line:#E4E6EC;--line-2:#EEF0F4;
+  --ink:#0E1116;--muted:#555B6B;--faint:#6F7586;
+  --blue:#1F55F0;--blue-ink:#1747D6;--blue-soft:#EAF0FF;--blue-line:#AFC3FF;--blue-pale:#C9D7FF;
+  --red:#C8102E;--green:#15803D;--green-soft:#EFFBF3;--green-line:#A6E3BC;
+  --range:#80869A;--grid-dot:#DADDE6;--spark:#B4B9C6;--plane:#3A3F4B;
+  --shadow:0 1px 2px rgba(14,17,22,.04),0 12px 32px rgba(14,17,22,.06);
+  --sans:Inter,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+:root[data-theme=dark]{
+  --bg:#0A0C11;--surface:#11141B;--surface-2:#171B24;--line:#252A35;--line-2:#1D212B;
+  --ink:#EEF0F5;--muted:#A6ACBA;--faint:#8A90A0;
+  --blue:#5482FF;--blue-ink:#7A9DFF;--blue-soft:#141D3D;--blue-line:#2D3F80;--blue-pale:#22305F;
+  --red:#FF4D61;--green:#3DD68C;--green-soft:#0D2519;--green-line:#1E5A3A;
+  --range:#6B7183;--grid-dot:#222733;--spark:#3A4050;--plane:#C9CDD8;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;position:relative;overflow-x:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.mono{font-family:var(--mono)}
+
+/* Sky: lives in the document, so it scrolls with the page natively */
+#sky{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0;overflow:hidden;background-repeat:repeat}
+#sky canvas{position:absolute;left:0;top:0;will-change:transform}
+#sky .candle{animation:bob var(--d,4s) ease-in-out infinite alternate;animation-delay:var(--dl,0s)}
+@keyframes bob{from{transform:translateY(-6px)}to{transform:translateY(6px)}}
+.wrap{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:0 24px}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+.logo small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.links{display:flex;gap:30px;margin-left:auto}
+.links a{font-size:17px;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.icon-btn{width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{border-color:var(--blue-line)}
+.soon{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--blue-ink);background:color-mix(in srgb,var(--blue) 14%,transparent);padding:2px 8px;border-radius:999px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 22px;border-radius:6px;font-size:18px;font-weight:500;border:1px solid transparent;white-space:nowrap}
+.btn-blue{background:var(--blue);color:#fff;font-weight:600}
+.btn-blue:hover{background:var(--blue-ink)}
+.btn-soft{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue-ink)}
+.btn-soft:hover{border-color:var(--blue)}
+.btn-sm{height:44px;font-size:17px;padding:0 16px}
+
+/* Common */
+section{position:relative}
+.eyebrow{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1,h2{margin:0;font-weight:600;letter-spacing:-.035em;line-height:1.06}
+h2{font-size:clamp(36px,4.4vw,58px)}
+.lede{font-size:20px;color:var(--muted);max-width:780px;margin:18px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.sec{padding:120px 0 40px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.sec-head h2{margin-top:14px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 534px;gap:64px;align-items:center;padding:110px 0 120px}
+.pill{display:inline-flex;align-items:center;gap:10px;height:38px;padding:0 16px;border:1px solid var(--blue-line);background:color-mix(in srgb,var(--blue-soft) 70%,transparent);border-radius:999px;font-family:var(--mono);font-size:14px;color:var(--blue-ink)}
+.pill i{width:9px;height:9px;background:var(--blue)}
+.hero h1{font-size:clamp(46px,5.4vw,72px);margin-top:28px}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lede{font-size:22px;max-width:680px;margin-top:30px;line-height:1.6}
+.ctas{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+
+/* Widget */
+.widget{padding:24px 22px 18px;position:relative}
+.w-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.w-title{font-size:15px;font-weight:600;color:var(--muted)}
+.w-label{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.poolbox{position:relative;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);margin-bottom:18px}
+.pair-btn{width:100%;display:flex;align-items:center;gap:12px;border:none;background:none;padding:14px;text-align:left;border-radius:8px 8px 0 0}
+.pair-btn:hover .pb-change{color:var(--blue-ink)}
+.pb-change{margin-left:auto;font-size:14px;font-weight:500;color:var(--blue)}
+.pair-btn b{font-size:19px;font-weight:600;display:block}
+.pair-btn small{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.chev{transition:transform .2s;color:var(--muted);flex-shrink:0}
+.pair-btn[aria-expanded=true] .chev{transform:rotate(180deg)}
+.wallet{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 6px;border-radius:999px;border:1px solid var(--blue-line);background:var(--blue-soft);font-family:var(--mono);font-size:14px}
+.check{width:24px;height:24px;border-radius:50%;background:var(--blue);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu{position:absolute;left:8px;right:8px;top:70px;z-index:5;min-width:280px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;display:none}
+.menu.open{display:block}
+.menu button{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border:none;background:none;border-radius:8px;text-align:left}
+.menu button:hover,.menu button[aria-current=true]{background:var(--surface-2)}
+.menu small{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:auto}
+.pooldd{border-top:1px solid var(--line)}
+.pooldd summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;font-size:13px;color:var(--muted)}
+.pooldd summary::-webkit-details-marker{display:none}
+.pooldd summary:hover{color:var(--ink)}
+.pooldd[open] summary .chev{transform:rotate(180deg)}
+.wstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.wstats>div{padding:10px 14px}
+.wstats>div+div{border-left:1px solid var(--line)}
+.wstats span{display:block;font-size:12px;color:var(--muted)}
+.wstats b{display:block;font-family:var(--mono);font-size:14px;font-weight:500;margin-top:2px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface-2);border-radius:8px}
+.tabs button{height:38px;border:none;background:none;border-radius:6px;font-size:16px;color:var(--muted)}
+.tabs button[aria-selected=true]{background:var(--surface);color:var(--ink);font-weight:500;box-shadow:0 1px 2px rgba(14,17,22,.08)}
+.position{margin-top:18px;display:flex;align-items:center;gap:14px;padding:16px 14px;border:2px solid var(--blue);border-radius:6px}
+.position .id{font-family:var(--mono);font-size:16px}
+.position .rng{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.position .val{margin-left:auto;text-align:right;font-family:var(--mono)}
+.oor{font-size:13px;color:var(--red);display:inline-flex;align-items:center;gap:6px}
+.oor::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.ir{color:var(--green)}
+.deposit{margin-top:18px;display:none;flex-direction:column;gap:10px}
+.deposit.on{display:flex}
+.dfield{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2)}
+.dfield:focus-within{border-color:var(--blue)}
+.dfield input{flex-grow:1;min-width:0;border:none;outline:none;background:none;font-family:var(--mono);font-size:20px;color:var(--ink)}
+.dfield input::-webkit-inner-spin-button,.dfield input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.dfield span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.dhint{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:0 4px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.dhint b{color:var(--ink);font-weight:500}
+.uplift{margin-top:18px;padding:16px;border:1px solid var(--blue-line);background:var(--blue-soft);border-radius:6px}
+.uplift-top{display:flex;align-items:center;font-size:15px;font-weight:500}
+.uplift .tipbox{left:-8px;transform:none}
+.uplift b{display:block;font-family:var(--mono);font-size:30px;font-weight:500;color:var(--blue);margin-top:10px}
+.details{margin-top:18px;border:1px solid var(--line);border-radius:6px}
+.details summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 16px;font-weight:500}
+.details summary::-webkit-details-marker{display:none}
+.details summary span{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--muted);font-weight:400}
+.details summary span b{color:var(--ink);font-weight:500}
+.details[open] .chev{transform:rotate(180deg)}
+.drows{padding:0 16px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.drows div{display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+.drows b{color:var(--ink);font-weight:500;text-align:right}
+.automate{margin-top:18px;width:100%;height:62px;border:none;border-radius:6px;background:var(--blue);color:#fff;font-size:20px;font-weight:600}
+.automate:hover{background:var(--blue-ink)}
+.fine{text-align:center;font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:14px}
+
+/* Token icons */
+.ti{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;background:var(--surface-2);box-shadow:0 0 0 2px var(--surface);object-fit:cover}
+.ti.sm{width:24px;height:24px;font-size:10px}
+.duo{display:inline-flex;align-items:center}
+.duo .ti+.ti{margin-left:-10px}
+
+/* Position section */
+.pos-grid{display:grid;grid-template-columns:minmax(0,1fr) 526px;gap:22px;align-items:start;margin-top:72px}
+.pcard{padding:30px 28px 26px}
+.p-head{display:flex;align-items:center;gap:14px}
+.p-head b{font-size:20px;font-weight:600;display:block}
+.p-head small{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.chip{margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--green-line);background:var(--green-soft);color:var(--green);font-family:var(--mono);font-size:14px;white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.out{border-color:color-mix(in srgb,var(--red) 40%,transparent);background:color-mix(in srgb,var(--red) 8%,transparent);color:var(--red)}
+.pv-label{margin-top:30px;font-size:15px;color:var(--muted)}
+.vgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;margin-top:24px}
+.vlabel{font-size:14px;color:var(--muted)}
+.vsub{font-size:14px;color:var(--muted);margin-top:4px}
+.vsub.mono{font-size:12.5px}
+.up{color:var(--green);font-weight:500}.down{color:var(--red);font-weight:500}
+.earn{padding-left:24px;border-left:1px solid var(--line)}
+.earn-big{font-family:var(--mono);font-size:32px;font-weight:500;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.earn-big .plus{color:var(--green)}
+.erows{margin:10px 0 0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.erows div{display:flex;justify-content:space-between;gap:10px}
+.erows dt{color:var(--muted)}
+.erows dd{margin:0;font-family:var(--mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.cf{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+.cf b{color:var(--ink);font-weight:600}
+.comp{margin-top:22px}
+.comp-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.comp-rng{font-size:12.5px;color:var(--muted)}
+.bar{display:flex;height:10px;border-radius:999px;background:var(--blue-pale);overflow:hidden;margin-top:10px}
+.bar span{display:block;height:100%;background:var(--blue);border-radius:999px 0 0 999px}
+.comp-leg{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:14px}
+.comp-leg>span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.comp-leg b{font-weight:500}
+.comp-leg i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font-size:14px;color:var(--muted)}
+.facts b{color:var(--ink);font-weight:600;font-family:var(--mono)}
+.info{position:relative;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:4px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--muted);font-family:var(--mono);font-size:10px;font-weight:600;line-height:1;vertical-align:1px;cursor:help}
+.info:hover,.info:focus-visible{border-color:var(--blue-line);color:var(--blue-ink)}
+.tipbox{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:240px;padding:10px 12px;border-radius:8px;background:#0E1116;border:1px solid #2A2F3A;color:#FFFFFF;font-family:var(--sans);font-size:13px;font-weight:400;line-height:1.45;letter-spacing:0;text-transform:none;white-space:normal;text-align:left;box-shadow:var(--shadow);opacity:0;visibility:hidden;transition:opacity .15s;z-index:20;pointer-events:none}
+.info:hover .tipbox,.info:focus .tipbox{opacity:1;visibility:visible}
+.pstats>div:last-child .tipbox{left:auto;right:-8px;transform:none}
+.pstats>div:first-child .tipbox{left:-8px;transform:none}
+.pv{font-family:var(--mono);font-size:clamp(40px,4vw,54px);font-weight:500;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+.chart{position:relative;margin-top:18px;height:300px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);overflow:hidden}
+.chart canvas{position:absolute;inset:0;width:100%;height:100%}
+.badge{position:absolute;top:12px;right:14px;display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--muted)}
+.badge i{width:8px;height:8px;background:var(--range)}
+.tip{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);padding:2px 10px;border:1px solid var(--blue-line);background:color-mix(in srgb,var(--surface) 94%,transparent);font-family:var(--mono);font-size:13px;color:var(--blue-ink);white-space:nowrap;z-index:1}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:11px;height:11px;display:inline-block}
+.legend i.dash{width:18px;height:5px;background:repeating-linear-gradient(90deg,var(--range) 0 4px,transparent 4px 7px)}
+.pstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;margin-top:20px}
+.pstats>div{padding:16px 14px}
+.pstats>div+div{border-left:1px solid var(--line)}
+.pstats span{display:block;font-size:14px;color:var(--muted)}
+.pstats b{display:block;font-family:var(--mono);font-size:19px;font-weight:500;margin-top:6px;font-variant-numeric:tabular-nums}
+.pstats b.blue{color:var(--blue)}
+.pstats b.up{color:var(--green)}
+.pstats b span{display:inline;font:inherit;color:inherit}
+.pstats .tipbox{display:block;margin:0;color:#FFFFFF;font-size:13px}
+.pstats .tipbox span{display:inline;font:inherit;color:inherit}
+.pfoot{margin-top:22px;padding-top:18px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:13px;color:var(--muted)}
+.rewards{padding:28px 26px}
+.rewards h3,.vd h3{margin:0;font-size:19px;font-weight:600}
+.rlist{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.r-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.accru{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;color:var(--green)}
+.accru i{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite}
+.accru.paused{color:var(--muted)}
+.accru.paused i{animation:none}
+@keyframes pulse{50%{opacity:.35}}
+.r-big{margin-top:18px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.r-big b{font-size:34px;font-weight:500;color:var(--blue)}
+.r-big span{font-size:16px;color:var(--muted)}
+.r-sub{font-size:14px;color:var(--muted);margin-top:2px}
+.flows{list-style:none;margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:16px}
+.flows li{display:flex;gap:12px;align-items:flex-start}
+.flows b{display:block;font-size:15px;font-weight:600}
+.flows small{display:block;font-size:14px;color:var(--muted);line-height:1.45}
+.fi{width:30px;height:30px;border-radius:8px;background:var(--surface-2);color:var(--blue);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.claim{margin-top:22px;width:100%;height:52px;border:none;border-radius:6px;background:var(--blue);color:#fff;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.claim:hover{background:var(--blue-ink)}
+.claim:disabled{background:var(--surface-2);color:var(--muted);cursor:default}
+.r-note a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.ghost{height:44px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font-size:15px;font-weight:500}
+.ghost:hover{border-color:var(--blue-line);color:var(--blue-ink)}
+.r-note{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.ritem{display:flex;align-items:center;gap:12px;width:100%;padding:16px 18px;border:1px solid var(--line);border-radius:6px;background:var(--surface);text-align:left}
+.ritem:hover{border-color:var(--blue-line)}
+.ritem b{display:block;font-size:17px;font-weight:600}
+.ritem small{display:block;font-size:14px;color:var(--muted)}
+.ritem .rv{margin-left:auto;font-family:var(--mono);font-size:16px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ritem.hl{border-color:var(--blue);background:var(--blue-soft)}
+.vd{margin-top:22px;padding:0}
+.vd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:28px 26px}
+.vd summary::-webkit-details-marker{display:none}
+.vd summary span{margin-left:auto;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.vd[open] .chev{transform:rotate(180deg)}
+.vrows{padding:0 26px 24px;display:flex;flex-direction:column;gap:10px;font-size:15px}
+.vrows div{display:flex;justify-content:space-between;gap:12px;color:var(--muted);padding-bottom:10px;border-bottom:1px dashed var(--line-2)}
+.vrows b{color:var(--ink);font-weight:500;text-align:right;font-family:var(--mono);font-size:14px}
+
+/* Compare */
+.shock{display:inline-flex;align-items:center;gap:12px;height:50px;padding:0 20px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font-size:17px}
+.shock:hover{border-color:var(--red)}
+.shock i{width:14px;height:14px;background:var(--red);box-shadow:3px -3px 0 -1px var(--red)}
+.shock:disabled{opacity:.6;cursor:progress}
+.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:64px;align-items:stretch}
+.ccard{padding:22px 22px 24px;position:relative;box-shadow:none}
+.ccard.pro{border:1.5px solid var(--blue);box-shadow:0 24px 48px -24px color-mix(in srgb,var(--blue) 35%,transparent)}
+.tag{position:absolute;top:-12px;left:22px;background:var(--blue);color:#fff;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;padding:3px 10px;border-radius:4px}
+.ccv{display:block;width:100%;height:130px}
+.cstat{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:12px;padding-bottom:18px;border-bottom:1px dashed var(--line)}
+.cstat .r{color:var(--red)}.cstat .b{color:var(--blue)}.cstat .k{color:var(--ink)}
+.ccard h3{margin:22px 0 0;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.ccard p{margin:6px 0 0;color:var(--muted)}
+.crows{margin-top:24px;border-top:1px solid var(--line)}
+.crows div{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+.crows div:last-child{border-bottom:none}
+.crows span{color:var(--muted)}
+.crows b{font-weight:500;text-align:right}
+.pro .crows b{color:var(--blue)}
+
+/* How it works */
+.how-line{display:block;width:100%;height:40px;margin-top:64px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:8px}
+.step{padding:24px 22px;box-shadow:none;transition:border-color .4s}
+.step.lit{border-color:var(--blue)}
+.step .n{font-family:var(--mono);font-size:13px;color:var(--blue)}
+.step h3{margin:10px 0 0;font-size:21px;font-weight:600;letter-spacing:-.01em}
+.step p{margin:8px 0 0;color:var(--muted);font-size:16px}
+
+/* Pools */
+.pools{display:grid;grid-template-columns:minmax(0,1fr) 460px;gap:64px;align-items:center}
+.grp{margin-top:40px}
+.grp>span{display:block;font-family:var(--mono);font-size:14px;color:var(--muted);margin-bottom:14px}
+.toks{display:flex;flex-wrap:wrap;gap:10px}
+.tok{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:17px;font-weight:600}
+.tok:hover{border-color:var(--blue-line)}
+.spark{display:block;width:100%;height:360px}
+footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:120px;background:var(--bg)}
+.foot{max-width:1360px;margin:0 auto;padding:44px 24px 56px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.foot b{font-size:17px}
+.foot p{margin:6px 0 0;color:var(--muted)}
+.foot-link{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-size:15px}
+.foot-link:hover{color:var(--blue-ink)}
+.foot .mono{color:var(--muted);font-size:15px;align-self:center}
+
+/* Mobile nav */
+.burger{display:none}
+.mnav{border-top:1px solid var(--line);padding:8px 24px 18px;display:flex;flex-direction:column}
+.mnav[hidden]{display:none}
+.mnav a:not(.btn){padding:14px 0;font-size:18px;border-bottom:1px solid var(--line-2)}
+.mnav .btn{margin-top:14px;justify-content:center}
+
+/* Wallet */
+.wal{position:relative;flex-shrink:0}
+.wallet{cursor:pointer}
+.wallet .chev{margin-left:2px}
+.wallet:hover{border-color:var(--blue)}
+.wallet.off{padding:0 16px;background:var(--blue);border-color:var(--blue);color:#fff;font-family:var(--sans);font-weight:600}
+.wallet.off .check,.wallet.off .chev{display:none}
+.wallet.busy{opacity:.7;cursor:progress}
+.wmenu{position:absolute;right:0;top:44px;z-index:6;width:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:8px}
+.wmenu[hidden]{display:none}
+.wm-head{display:flex;gap:10px;align-items:center;padding:8px}
+.wm-head b{display:block;font-size:15px}
+.wm-head small{display:block;font-size:13px;color:var(--muted)}
+.wdot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.wm-addr{font-size:13px;color:var(--muted);padding:0 8px 10px;border-bottom:1px solid var(--line-2);margin-bottom:6px}
+.wmenu button{width:100%;text-align:left;padding:11px 8px;border:none;background:none;border-radius:6px;font-size:15px}
+.wmenu button:hover{background:var(--surface-2)}
+.wmenu .danger{color:var(--red)}
+.nowal{margin-top:18px;padding:16px;border:1px dashed var(--line);border-radius:6px;display:flex;flex-direction:column;gap:4px}
+.nowal[hidden]{display:none}
+.nowal b{font-weight:600}
+.nowal span{font-size:14px;color:var(--muted)}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(10,12,17,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal[hidden]{display:none}
+.sheet{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+.sh-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sh-head b{font-size:18px}
+.x{width:40px;height:40px;border:none;background:none;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+.x:hover{background:var(--surface-2)}
+.wlist{display:flex;flex-direction:column;gap:8px}
+.wlist button{display:flex;align-items:center;gap:12px;min-height:56px;padding:0 14px;border:1px solid var(--line);background:var(--surface);border-radius:8px;font-size:16px;font-weight:500;text-align:left}
+.wlist button:hover{border-color:var(--blue-line)}
+.wlist button small{margin-left:auto;font-size:12px;color:var(--muted);font-weight:400}
+.wlist button[disabled]{opacity:.6;cursor:progress}
+.wi{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.wi i{width:12px;height:12px;display:block}
+.spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-left:auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sh-note{margin:14px 0 0;font-size:13px;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;z-index:50;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:8px;font-family:var(--mono);font-size:13px;transition:all .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1180px){
+  .links{display:none}
+  .burger{display:inline-flex}
+  .nav-in{gap:12px}
+  .logo{margin-right:auto}
+  .hero,.pos-grid,.pools{grid-template-columns:minmax(0,1fr)}
+  .hero{padding:64px 0 80px;gap:48px}
+  .cmp,.steps{grid-template-columns:1fr 1fr}
+}
+@media (max-width:700px){
+  .logo small{display:none}
+  .nav-in{padding:12px 16px;gap:8px}
+  .nav-app{display:none}
+  .mnav{padding:4px 16px 16px}
+  .wrap{padding:0 16px}
+  h2{font-size:clamp(30px,8.4vw,40px)}
+  .lede{font-size:18px}
+  .hero{padding:44px 0 64px;gap:40px}
+  .hero h1{font-size:clamp(40px,11vw,52px);margin-top:22px}
+  .hero .lede{font-size:18px;margin-top:22px}
+  .pill{font-size:13px;height:34px;padding:0 12px}
+  .ctas{gap:10px}
+  .ctas .btn{flex:1 1 100%;justify-content:center;height:52px;font-size:17px}
+  .widget{padding:18px 16px 16px}
+  .w-head{padding-bottom:14px;margin-bottom:16px}
+  .pair-btn{padding:12px}
+  .pb-change{display:none}
+  .pair-btn .chev{margin-left:auto}
+  .wstats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wstats>div:nth-child(3){border-left:none}
+  .wstats>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .wmenu{top:42px}
+  .pair-btn b,.pair-btn small{white-space:nowrap}
+  .menu{top:64px;min-width:0}
+  .position{gap:10px;padding:12px}
+  .position>.check{display:none}
+  .position .id{font-size:15px}
+  .position .rng,.oor{white-space:nowrap}
+  .uplift b{font-size:26px}
+  .details summary{flex-wrap:wrap;row-gap:4px}
+  .details summary span{order:3;width:100%;margin-left:0}
+  .details summary .chev{margin-left:auto}
+  .automate{height:56px;font-size:18px}
+  .pos-grid{margin-top:40px}
+  .pcard{padding:20px 16px}
+  .p-head{flex-wrap:wrap;row-gap:10px}
+  .p-head small{font-size:13px;white-space:nowrap}
+  .chip{margin-left:0}
+  .pv-label{margin-top:20px}
+  .pstats>div:nth-child(2) .tipbox,.pstats>div:nth-child(4) .tipbox{left:auto;right:-8px;transform:none}
+  .pstats>div:nth-child(3) .tipbox{left:-8px;transform:none}
+  .earn{padding:16px 0 0;border-left:none;border-top:1px solid var(--line)}
+  .earn-big{font-size:28px}
+  .comp-leg{font-size:13px}
+  .chart{height:240px}
+  .tip{left:10px;top:48px;transform:none;font-size:11px;padding:2px 6px}
+  .badge{font-size:12px;top:10px;right:10px}
+  .legend{gap:6px 16px;font-size:12px}
+  .pstats>div{padding:12px}
+  .pstats b{font-size:17px}
+  .rewards{padding:22px 18px}
+  .r-big b{font-size:30px}
+  .vd summary{padding:22px 18px}
+  .vrows{padding:0 18px 20px;font-size:14px}
+  .vrows b{font-size:13px}
+  .sec-head{align-items:flex-start}
+  .shock{width:100%;justify-content:center}
+  .cmp{margin-top:36px}
+  .ccard{padding:20px 18px}
+  .crows div{font-size:15px}
+  .step{padding:20px 18px}
+  .grp{margin-top:28px}
+  .tok{height:44px;font-size:16px}
+  .spark{height:280px}
+  footer{margin-top:72px}
+  .foot{padding:32px 16px 40px}
+  #sky{opacity:.55}
+  .modal{align-items:flex-end;padding:0}
+  .sheet{max-width:none;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+  .cmp,.steps{grid-template-columns:1fr}
+  .pstats{grid-template-columns:1fr 1fr}.pstats>div:nth-child(3){border-left:none;border-top:1px solid var(--line)}.pstats>div:nth-child(4){border-top:1px solid var(--line)}
+  .wstats{flex-wrap:wrap;gap:8px 16px}
+  .how-line{display:none}
+  .sec{padding:80px 0 20px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#sky .candle{animation:none}}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="logo" href="#top" aria-label="Autopilot home">
+      <svg width="38" height="26" viewBox="0 0 19 13" shape-rendering="crispEdges" aria-hidden="true"><g fill="var(--blue)"><rect x="7" y="0" width="5" height="1"/><rect x="5" y="1" width="9" height="1"/><rect x="2" y="2" width="15" height="1"/><rect x="1" y="3" width="17" height="4"/><rect x="0" y="5" width="19" height="2"/></g><g fill="var(--blue-pale)"><rect x="1" y="8" width="17" height="1"/></g><g fill="var(--blue)" opacity=".55"><rect x="3" y="10" width="2" height="2"/><rect x="9" y="10" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/></g></svg>
+      <span><b>Autopilot</b><small>Automated liquidity for Aerodrome</small></span>
+    </a>
+    <nav class="links" aria-label="Sections">
+      <a href="#position">Your position</a>
+      <a href="#compare">Compare</a>
+      <a href="#how">How it works</a>
+      <a href="#pools">Pools</a>
+    </nav>
+    <button class="icon-btn" id="theme" aria-label="Toggle dark mode">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn-soft btn-sm nav-app" href="#" data-toast="The app is opening soon.">Open App <span class="soon">SOON</span></a>
+    <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <nav class="mnav" id="mnav" aria-label="Sections" hidden>
+    <a href="#position">Your position</a>
+    <a href="#compare">Compare</a>
+    <a href="#how">How it works</a>
+    <a href="#pools">Pools</a>
+    <a class="btn btn-soft" href="#" data-toast="The app is opening soon.">Open App <span class="soon">SOON</span></a>
+  </nav>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div>
+      <a class="pill" href="#how"><i></i>For Aerodrome LPs · one click <span aria-hidden="true">→</span></a>
+      <h1>Aerodrome Liquidity.<br>On <em>Autopilot.</em></h1>
+      <p class="lede">Stop babysitting your LP position. Hand it to Autopilot in one click: auto-rebalancing works to keep it in range so it can keep earning, and you can take it back any time.</p>
+      <div class="ctas">
+        <a class="btn btn-blue" href="#position">Watch it grow <span aria-hidden="true">→</span></a>
+        <a class="btn btn-soft" href="#" data-toast="The app is opening soon.">Open App <span class="soon">SOON</span></a>
+      </div>
+    </div>
+
+    <div class="card widget" aria-label="Automate a position">
+      <div class="w-head">
+        <span class="w-title">Automate a position</span>
+        <div class="wal" id="wal">
+          <button class="wallet" id="walBtn" aria-haspopup="menu" aria-expanded="false"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><span id="walAddr">0x7a3f…91c2</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="wmenu" id="walMenu" role="menu" hidden>
+            <div class="wm-head"><span class="wdot"></span><span><b>Connected</b><small id="walName">Coinbase Wallet · Base</small></span></div>
+            <div class="wm-addr mono">0x7a3f2c…e0b491c2</div>
+            <button role="menuitem" id="walCopy">Copy address</button>
+            <button role="menuitem" id="walDisc" class="danger">Disconnect</button>
+          </div>
+        </div>
+      </div>
+      <div class="w-label" id="poolLabel">Aerodrome pool</div>
+      <div class="poolbox">
+        <button class="pair-btn" id="pairBtn" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="poolLabel pairName">
+          <span class="duo" id="pairIcons"></span>
+          <span><b id="pairName">WETH / USDC</b><small id="pairMeta">Slipstream · 0.0594% · Base</small></span>
+          <span class="pb-change">Change</span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <details class="pooldd">
+          <summary>Pool stats<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="wstats">
+            <div><span>TVL</span><b id="wTvl">$8.66M</b></div>
+            <div><span>Vol 24h</span><b id="wVol">$81.7M</b></div>
+            <div><span>Fee APR</span><b id="wApr">22.0%</b></div>
+            <div><span>AERO APR</span><b id="wAero">15.4%</b></div>
+          </div>
+        </details>
+        <div class="menu" id="pairMenu" role="listbox" aria-labelledby="poolLabel"></div>
+      </div>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="lp">My LP position</button>
+        <button role="tab" aria-selected="false" data-tab="dep">Deposit tokens</button>
+      </div>
+      <div class="position" id="lpPane">
+        <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+        <span class="duo" id="posIcons"></span>
+        <span><span class="id" id="posId">#24,781,906</span><br><span class="rng" id="posRange">2,612 – 2,701</span></span>
+        <span class="val"><span id="posVal">$12,480</span><br><span class="oor" id="posStatus">Out of range</span></span>
+      </div>
+      <div class="nowal" id="noWal" hidden>
+        <b>No wallet connected</b>
+        <span>Connect a wallet to see your Aerodrome LP positions, or deposit tokens instead.</span>
+      </div>
+      <div class="deposit" id="depPane">
+        <label class="dfield"><span id="depIconA"></span><input id="depA" type="number" min="0" step="any" placeholder="0.0" inputmode="decimal" aria-label="Amount of first token"><span id="depAName">WETH</span></label>
+        <label class="dfield"><span id="depIconB"></span><input id="depB" type="number" min="0" step="any" placeholder="0.0" inputmode="decimal" aria-label="Amount of second token"><span id="depBName">USDC</span></label>
+        <div class="dhint" id="depHint"></div>
+      </div>
+      <div class="uplift">
+        <div class="uplift-top">Estimated earnings <button class="info" type="button" aria-describedby="upliftNote" aria-label="How this is estimated">i<span class="tipbox" role="tooltip" id="upliftNote">Today's fee APR is 22.0%, capped at 20%, at 90% time in range. Estimate only.</span></button></div>
+        <b id="uplift">+$187/mo</b>
+      </div>
+      <details class="details">
+        <summary>Details <span>You receive <b id="receive">11,653.7 av-WETH/USDC</b></span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="drows">
+          <div>Range<b>Auto-rebalancing</b></div>
+          <div>Swap fees<b>Compounded into your position</b></div>
+          <div>AERO rewards<b>Paid as xAERO, yours to claim</b></div>
+          
+          <div>Take it back<b>Any time, both tokens</b></div>
+        </div>
+      </details>
+      <button class="automate" id="automate">Automate My Position</button>
+      <div class="fine">Non-custodial · withdraw anytime · rewards stay yours</div>
+    </div>
+  </section>
+
+  <!-- Your position -->
+  <section class="sec" id="position">
+    <div class="eyebrow">After you deposit</div>
+    <h2 style="margin-top:14px;max-width:1040px">Watch Your Aero LP Position Grow, on Autopilot</h2>
+    <p class="lede">Your position, live. Autopilot auto-rebalances it to stay in range. Swap fees are compounded into your position; AERO rewards are paid as xAERO and kept separate for you to claim. Every number is public onchain.</p>
+
+    <div class="pos-grid">
+      <div class="card pcard">
+        <div class="p-head">
+          <span class="duo"><span class="ti" data-t="WETH"></span><span class="ti" data-t="USDC"></span></span>
+          <span><b>WETH / USDC</b><small>Autopilot vault · av-WETH/USDC</small></span>
+          <span class="chip" id="rangeChip">In range</span>
+        </div>
+        <div class="pv-label">Position value <button class="info" type="button" aria-describedby="tPv" aria-label="More info">i<span class="tipbox" role="tooltip" id="tPv">Example: $12,480 deposited on Sep 2, when ETH was $2,418. Includes swap fees compounded into the position. xAERO rewards are kept separate.</span></button></div>
+        <div class="pv">$13,364.80</div>
+        <div class="chart">
+          <canvas id="posChart"></canvas>
+          <span class="badge"><i></i><span id="rangeBadge">Auto-rebalancing on</span></span>
+          <span class="tip" id="tip">In range · earning fees</span>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--blue)"></i>Price in range · earning</span>
+          <span><i style="background:var(--red)"></i>Out of range · earning paused</span>
+          <span><i class="dash"></i>Your range</span>
+        </div>
+        <div class="pstats">
+          <div><span>Earned · 30d <button class="info" type="button" aria-describedby="tEarn" aria-label="More info">i<span class="tipbox" role="tooltip" id="tEarn">xAERO rewards: <span id="tXTotal">227.51 ($180.87)</span>: <span id="tClaimed">217.16</span> claimed, <span id="tReady">10.35</span> ready to claim. Swap fees compounded: $61.15. Left out of range, your old position would have earned $0.</span></button></span><b class="up"><span id="earnTotal">+$242.0183</span></b></div>
+          <div><span>Fees compounded</span><b>$61.15</b></div>
+          <div><span>Time in range</span><b>97.8%</b></div>
+          <div><span>Auto-rebalances <button class="info" type="button" aria-describedby="tReb" aria-label="More info">i<span class="tipbox" role="tooltip" id="tReb">Earning swap fees right now: they pay more than AERO today (22.0% vs 15.4%). Last 30 days: staked 21 days, earning fees 9 days.</span></button></span><b>14</b></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card rewards">
+          <div class="r-head"><h3>Your rewards</h3><span class="accru paused"><i></i>Fees pay more today</span></div>
+          <div class="r-big"><b id="rXaero">10.3490</b> <span>xAERO</span></div>
+          <div class="r-sub"><span id="rXaeroUsd">≈ $8.23</span> · ready to claim · <span id="rClaimed">217.16</span> claimed so far</div>
+          <ul class="flows">
+            <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span><span><b>xAERO rewards</b><small>Yours to keep, held separately from your position.</small></span></li>
+            <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><span><b>Swap fees</b><small>Compounded into your position automatically, whenever it earns them.</small></span></li>
+            <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><span><b>Claim whenever you like</b><small>Your position keeps working either way. Rewards wait for you.</small></span></li>
+          </ul>
+          <button class="claim" id="claimBtn">Claim <span id="claimAmt">10.3490</span> xAERO</button>
+          <p class="r-note">Claimed xAERO goes straight to your wallet. Redeem it for AERO on Aerodrome whenever you want. Your position stays on Autopilot. <a href="#" data-toast="Demo: WETH + USDC go straight back to your wallet.">Withdraw position</a></p>
+        </div>
+        <details class="card vd">
+          <summary><h3>Vault details</h3><span>public onchain</span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="vrows">
+            <div>Share price<b id="vShare">$1.07090</b></div>
+            <div>Current range<b>2,701 – 2,791 USDC</b></div>
+            <div>Mode<b>Earning fees · 22.0% &gt; AERO 15.4%</b></div>
+            <div>Swap fees<b>Compounded</b></div>
+            <div>xAERO rewards<b>Passed through, claimable</b></div>
+            <div>Your claimable xAERO<b id="vX">10.3490 xAERO</b></div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare -->
+  <section class="sec" id="compare">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Why Autopilot</div>
+        <h2>Between doing it yourself and trusting<br>a black box.</h2>
+        <p class="lede">Same market, three ways to LP it. Hit the button and watch who stays in range.</p>
+      </div>
+      <button class="shock" id="shock"><i aria-hidden="true"></i>Simulate a price shock</button>
+    </div>
+    <div class="cmp">
+      <article class="card ccard">
+        <canvas class="ccv" data-strat="manual"></canvas>
+        <div class="cstat" id="st-manual">In range <span class="r">–</span> · costly rebalances <span class="r">–</span></div>
+        <h3>Manual LP</h3><p>Full control, full-time job.</p>
+        <div class="crows">
+          <div><span>Range</span><b>You pick, you fix</b></div>
+          <div><span>Rewards</span><b>Yours to claim</b></div>
+          <div><span>What you can see</span><b>Your own position</b></div>
+          <div><span>Rebalance cost</span><b>You pay full price</b></div>
+          <div><span>Exit</span><b>Any time</b></div>
+        </div>
+      </article>
+      <article class="card ccard pro">
+        <span class="tag">AUTOPILOT</span>
+        <canvas class="ccv" data-strat="auto"></canvas>
+        <div class="cstat" id="st-auto">In range <span class="b">–</span> · value lost <span class="b">–</span></div>
+        <h3>Autopilot by Harvest</h3><p>Hands-off, and you can still check everything.</p>
+        <div class="crows">
+          <div><span>Range</span><b>Auto-rebalancing, targets ≥90% in range</b></div>
+          <div><span>Rewards</span><b>Yours to claim</b></div>
+          <div><span>What you can see</span><b>Every number, onchain</b></div>
+          <div><span>Rebalance cost</span><b>Timed to keep costs low</b></div>
+          <div><span>Exit</span><b>Any time, straight from the vault</b></div>
+        </div>
+      </article>
+      <article class="card ccard">
+        <canvas class="ccv" data-strat="alm"></canvas>
+        <div class="cstat" id="st-alm">In range <span class="k">–</span> · costly rebalances <span class="r">–</span></div>
+        <h3>Typical automated vault</h3><p>Hands-off, until you ask a question.</p>
+        <div class="crows">
+          <div><span>Range</span><b>Automated</b></div>
+          <div><span>Rewards</span><b>Often sold for you</b></div>
+          <div><span>What you can see</span><b>Their dashboard</b></div>
+          <div><span>Rebalance cost</span><b>Value lost on swaps</b></div>
+          <div><span>Exit</span><b>Depends on the operator</b></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="sec" id="how">
+    <div class="eyebrow">How it works</div>
+    <h2 style="margin-top:14px">One click. Then it runs itself.</h2>
+    <p class="lede">Auto-rebalancing takes care of your range, and swap fees go back into your position.</p>
+    <canvas class="how-line" id="howLine" aria-hidden="true"></canvas>
+    <div class="steps">
+      <article class="card step"><span class="n">01</span><h3>Pick your pool</h3><p>Choose the Aerodrome pool you already LP in, or start fresh in a new one.</p></article>
+      <article class="card step"><span class="n">02</span><h3>Press Automate</h3><p>Bring your existing position or just deposit tokens. One click, one signature.</p></article>
+      <article class="card step"><span class="n">03</span><h3>Sit back</h3><p>Auto-rebalancing works to keep your position in range. Swap fees are compounded back into it automatically.</p></article>
+      <article class="card step"><span class="n">04</span><h3>Claim, or don't</h3><p>AERO rewards build up separately as xAERO. Claim them any time, withdraw any time.</p></article>
+    </div>
+  </section>
+
+  <!-- Pools -->
+  <section class="sec" id="pools">
+    <div class="pools">
+      <div>
+        <div class="eyebrow">Markets</div>
+        <h2 style="margin-top:14px">Supporting Aerodrome pools.</h2>
+        <p class="lede">Blue chips, stables, tokenized stocks and the wider Aero ecosystem. Autopilot works on the pools you already use, on Base and every chain Aerodrome runs on.</p>
+        <div class="grp"><span>Blue chips</span><div class="toks" data-toks="WETH,cbBTC,cbETH,wstETH,uSOL,cbLTC,cbADA"></div></div>
+        <div class="grp"><span>Stables</span><div class="toks" data-toks="USDC,USDT,EURC"></div></div>
+        <div class="grp"><span>Tokenized stocks</span><div class="toks" data-toks="Tesla · TSLAc,Coinbase · wtCOIN"></div></div>
+        <div class="grp"><span>Aero ecosystem</span><div class="toks" data-toks="AERO,VIRTUAL,MORPHO,AAVE,LINK,cbHYPE,cbZEC,ZEN,DEGEN,BRETT"></div></div>
+      </div>
+      <canvas class="spark" id="spark" aria-hidden="true"></canvas>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div><b>Harvest</b><p>Automated liquidity for Aerodrome LPs. Figures in the demo are illustrative.</p><p><a class="foot-link" href="/checklist">Requirements checklist</a></p></div>
+    <span class="mono">© 2026 Harvest Finance</span>
+  </div>
+</footer>
+<div class="modal" id="connect" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cTitle">
+    <div class="sh-head"><b id="cTitle">Connect a wallet</b><button class="x" id="cClose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="wlist">
+      <button data-wallet="Coinbase Wallet"><span class="wi" style="background:#0052FF"><i style="background:#fff;border-radius:50%"></i></span>Coinbase Wallet<small>Recommended on Base</small></button>
+      <button data-wallet="MetaMask"><span class="wi" style="background:#F6851B"><i style="background:#fff"></i></span>MetaMask<small></small></button>
+      <button data-wallet="Rabby"><span class="wi" style="background:#7084FF"><i style="background:#fff"></i></span>Rabby<small></small></button>
+      <button data-wallet="WalletConnect"><span class="wi" style="background:#3B99FC"><i style="background:#fff;border-radius:3px"></i></span>WalletConnect<small>Scan with your phone</small></button>
+    </div>
+    <p class="sh-note">Demo only. No wallet is actually connected and nothing is signed.</p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rand = (a, b) => a + Math.random() * (b - a);
+const ri = (a, b) => Math.floor(rand(a, b + 1));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const usd = (n, d = 2) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const D = Math.min(devicePixelRatio || 1, 2);
+
+/* ---------- theme + colors ---------- */
+const C = {};
+function readColors() {
+  const s = getComputedStyle(document.documentElement);
+  ['blue', 'blue-line', 'blue-pale', 'red', 'range', 'grid-dot', 'ink', 'surface', 'spark', 'plane'].forEach((k) => { C[k] = s.getPropertyValue('--' + k).trim(); });
+}
+try { const t = localStorage.getItem('ap-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+readColors();
+$('#theme').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme === 'dark';
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('ap-theme', root.dataset.theme); } catch (e) {}
+  readColors(); buildSky();
+});
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600);
+}
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-toast]');
+  if (el) { e.preventDefault(); toast(el.dataset.toast); }
+});
+
+/* ---------- token icons (sourced from Aerodrome's token asset CDN, stored locally) ---------- */
+const ICONS = new Set(['WETH', 'USDC', 'cbBTC', 'cbETH', 'wstETH', 'uSOL', 'cbLTC', 'cbADA', 'USDT', 'EURC', 'TSLAc', 'wtCOIN', 'AERO', 'VIRTUAL', 'MORPHO', 'AAVE', 'LINK', 'cbHYPE', 'cbZEC', 'ZEN', 'DEGEN', 'BRETT']);
+const iconKey = (label) => label.split('·').pop().trim();
+function iconEl(label, small) {
+  const key = iconKey(label);
+  if (ICONS.has(key)) {
+    const img = new Image(); img.className = 'ti' + (small ? ' sm' : '');
+    img.src = `assets/tokens/${key}.svg`; img.alt = ''; img.decoding = 'async';
+    img.width = img.height = small ? 24 : 30;
+    return img;
+  }
+  const s = document.createElement('span'); s.className = 'ti' + (small ? ' sm' : ''); s.textContent = key[0]; return s;
+}
+$$('.ti[data-t]').forEach((el) => el.replaceWith(iconEl(el.dataset.t, el.classList.contains('sm'))));
+$$('[data-toks]').forEach((box) => box.dataset.toks.split(',').forEach((label) => {
+  const b = document.createElement('a'); b.className = 'tok'; b.href = '#';
+  b.dataset.toast = `Autopilot is coming to ${iconKey(label)} pools.`;
+  b.append(iconEl(label, true), document.createTextNode(label)); box.append(b);
+}));
+
+/* ---------- mobile nav ---------- */
+const burger = $('#burger'), mnav = $('#mnav');
+const setNav = (open) => { mnav.hidden = !open; burger.setAttribute('aria-expanded', String(open)); burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); };
+burger.addEventListener('click', () => setNav(mnav.hidden));
+mnav.addEventListener('click', (e) => { if (e.target.closest('a')) setNav(false); });
+addEventListener('resize', () => { if (innerWidth > 1180) setNav(false); });
+
+/* ---------- hero widget ---------- */
+// Largest Slipstream pool per pair on Base, 2026-10-02 (DefiLlama yields; prices from CoinGecko).
+// Position IDs sit near the live Slipstream position-NFT supply (~24.78M); positions themselves are examples.
+const PX = { WETH: 2747.33, cbBTC: 86392, USDC: 1, AERO: 0.794986 };
+const SHARE_PRICE = 1.0709; // USD per share of the example vault (launched Sep 2 at $1.00)
+const POOLS = [
+  { a: 'WETH', b: 'USDC', fee: '0.0594%', tvl: '$8.66M', vol: '$81.7M', feeApr: 22.0, aeroApr: 15.4, id: '#24,781,906', range: '2,612 – 2,701', val: 12480, out: true, vault: [2701, 2791] },
+  { a: 'cbBTC', b: 'USDC', fee: '0.04%', tvl: '$6.00M', vol: '$13.3M', feeApr: 10.1, aeroApr: 10.8, id: '#24,779,331', range: '84,200 – 89,900', val: 8215, out: false, vault: [85100, 87700] },
+  { a: 'WETH', b: 'cbBTC', fee: '0.25%', tvl: '$17.07M', vol: '$3.41M', feeApr: 1.2, aeroApr: 2.5, id: '#24,776,048', range: '0.03305 – 0.03390', val: 4930, out: true, vault: [0.03128, 0.03232] }
+];
+let pool = POOLS[0], tab = 'lp';
+function renderPool() {
+  $('#pairIcons').replaceChildren(iconEl(pool.a), iconEl(pool.b));
+  $('#posIcons').replaceChildren(iconEl(pool.a, true), iconEl(pool.b, true));
+  $('#depIconA').replaceChildren(iconEl(pool.a, true)); $('#depIconB').replaceChildren(iconEl(pool.b, true));
+  $('#depAName').textContent = pool.a; $('#depBName').textContent = pool.b;
+  $('#pairName').textContent = `${pool.a} / ${pool.b}`;
+  $('#pairMeta').textContent = `Slipstream · ${pool.fee} · Base`;
+  $('#wTvl').textContent = pool.tvl; $('#wVol').textContent = pool.vol;
+  $('#wApr').textContent = pool.feeApr.toFixed(1) + '%'; $('#wAero').textContent = pool.aeroApr.toFixed(1) + '%';
+  $('#posId').textContent = pool.id; $('#posRange').textContent = pool.range;
+  $('#posVal').textContent = usd(pool.val, 0);
+  const st = $('#posStatus'); st.textContent = pool.out ? 'Out of range' : 'In range'; st.classList.toggle('ir', !pool.out);
+  renderUplift();
+  $$('#pairMenu button').forEach((b, i) => b.setAttribute('aria-current', String(POOLS[i] === pool)));
+}
+function renderUplift() {
+  let value = pool.val;
+  if (tab === 'dep') value = (parseFloat($('#depA').value) || 0) * PX[pool.a] + (parseFloat($('#depB').value) || 0) * PX[pool.b];
+  // A position earns swap fees (unstaked) or AERO (staked), not both: take today's better of the two,
+  // cap it at 20% to discount spikes, and assume 90% time in range.
+  const aeroWins = pool.aeroApr >= pool.feeApr, best = Math.max(pool.feeApr, pool.aeroApr);
+  const apr = Math.min(best, 20) / 100 * 0.9;
+  $('#uplift').textContent = '+' + usd(value * apr / 12, 0) + '/mo';
+  const basis = `Today's ${aeroWins ? 'AERO' : 'fee'} APR is ${best.toFixed(1)}%${best > 20 ? ', capped at 20%' : ''}, at 90% time in range.`;
+  $('#upliftNote').textContent = basis + ' Estimate only.';
+  $('#receive').textContent = `${(value / SHARE_PRICE).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} av-${pool.a}/${pool.b}`;
+}
+POOLS.forEach((p) => {
+  const b = document.createElement('button'); b.setAttribute('role', 'option');
+  const d = document.createElement('span'); d.className = 'duo'; d.append(iconEl(p.a, true), iconEl(p.b, true));
+  const s = document.createElement('small'); s.textContent = p.fee;
+  b.append(d, document.createTextNode(` ${p.a} / ${p.b}`), s);
+  b.addEventListener('click', () => { pool = p; closeMenu(); $('#depA').value = ''; $('#depB').value = ''; renderPool(); renderDepHint(); });
+  $('#pairMenu').append(b);
+});
+function closeMenu() { $('#pairMenu').classList.remove('open'); $('#pairBtn').setAttribute('aria-expanded', 'false'); }
+$('#pairBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = !$('#pairMenu').classList.contains('open');
+  $('#pairMenu').classList.toggle('open', open); $('#pairBtn').setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('click', (e) => { if (!e.target.closest('#pairMenu')) closeMenu(); });
+$$('[data-tab]').forEach((b) => b.addEventListener('click', () => {
+  tab = b.dataset.tab;
+  $$('[data-tab]').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+  $('#depPane').classList.toggle('on', tab === 'dep');
+  renderWallet();
+}));
+/* Dual deposit: amounts must match the vault position's ratio. For a concentrated-liquidity range
+   [Pa, Pb] at price P (B per A): A per unit liquidity = 1/√P − 1/√Pb, B = √P − √Pa. */
+const DECIMALS = { WETH: 6, cbBTC: 8, USDC: 2 };
+function bPerA(p) {
+  const P = PX[p.a] / PX[p.b], [Pa, Pb] = p.vault;
+  return (Math.sqrt(P) - Math.sqrt(Pa)) / (1 / Math.sqrt(P) - 1 / Math.sqrt(Pb));
+}
+const fmtAmt = (sym, x) => (x > 0 ? String(+x.toFixed(DECIMALS[sym] || 6)) : '');
+function renderDepHint() {
+  const r = bPerA(pool), aUsd = PX[pool.a], bUsd = r * PX[pool.b];
+  const aPct = Math.round(aUsd / (aUsd + bUsd) * 100);
+  const total = (parseFloat($('#depA').value) || 0) * PX[pool.a] + (parseFloat($('#depB').value) || 0) * PX[pool.b];
+  const fmtR = (n) => n.toLocaleString('en-US', { maximumSignificantDigits: 5 });
+  $('#depHint').innerHTML = `<span>${aPct}% ${pool.a} · ${100 - aPct}% ${pool.b} · range ${fmtR(pool.vault[0])} – ${fmtR(pool.vault[1])}</span><span>Total <b>${usd(total)}</b></span>`;
+}
+$('#depA').addEventListener('input', () => {
+  const a = parseFloat($('#depA').value);
+  $('#depB').value = isNaN(a) ? '' : fmtAmt(pool.b, a * bPerA(pool));
+  renderDepHint(); renderUplift();
+});
+$('#depB').addEventListener('input', () => {
+  const b = parseFloat($('#depB').value);
+  $('#depA').value = isNaN(b) ? '' : fmtAmt(pool.a, b / bPerA(pool));
+  renderDepHint(); renderUplift();
+});
+renderDepHint();
+renderPool();
+
+/* ---------- demo wallet: connect / disconnect (nothing real happens) ---------- */
+const wallet = { connected: true, name: 'Coinbase Wallet' };
+const walBtn = $('#walBtn'), walMenu = $('#walMenu'), modal = $('#connect');
+function setWalMenu(open) { walMenu.hidden = !open; walBtn.setAttribute('aria-expanded', String(open)); }
+function renderWallet() {
+  const on = wallet.connected;
+  walBtn.classList.toggle('off', !on);
+  walBtn.setAttribute('aria-haspopup', on ? 'menu' : 'dialog');
+  $('#walAddr').textContent = on ? '0x7a3f…91c2' : 'Connect wallet';
+  $('#walName').textContent = wallet.name + ' · Base';
+  $('#noWal').hidden = on || tab !== 'lp';
+  $('#lpPane').style.display = on && tab === 'lp' ? '' : 'none';
+  $('#automate').textContent = on ? 'Automate My Position' : 'Connect wallet';
+  renderUplift();
+  if (!on && tab === 'lp') { $('#uplift').textContent = '—'; $('#upliftNote').textContent = 'Connect a wallet to see an estimate for your position.'; }
+}
+function openConnect() {
+  setWalMenu(false); modal.hidden = false;
+  $$('.wlist button').forEach((b) => { b.disabled = false; b.querySelector('.spin')?.remove(); });
+  $('.wlist button').focus();
+}
+function closeConnect() { modal.hidden = true; walBtn.focus(); }
+walBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (wallet.connected) setWalMenu(walMenu.hidden); else openConnect();
+});
+$('#walCopy').addEventListener('click', () => {
+  try { navigator.clipboard.writeText('0x7a3f2c00000000000000000000000000e0b491c2'); } catch (err) {}
+  setWalMenu(false); toast('Address copied (demo address).');
+});
+$('#walDisc').addEventListener('click', () => { wallet.connected = false; setWalMenu(false); renderWallet(); toast('Wallet disconnected.'); });
+$$('.wlist button').forEach((b) => b.addEventListener('click', () => {
+  $$('.wlist button').forEach((x) => { x.disabled = true; });
+  const sp = document.createElement('span'); sp.className = 'spin'; b.querySelector('small').replaceWith(sp);
+  walBtn.classList.add('busy');
+  setTimeout(() => {
+    sp.replaceWith(Object.assign(document.createElement('small'), { textContent: b.dataset.wallet === 'Coinbase Wallet' ? 'Recommended on Base' : (b.dataset.wallet === 'WalletConnect' ? 'Scan with your phone' : '') }));
+    wallet.connected = true; wallet.name = b.dataset.wallet;
+    walBtn.classList.remove('busy'); modal.hidden = true; renderWallet();
+    toast(`Connected with ${wallet.name} · 0x7a3f…91c2`);
+  }, 1100);
+}));
+$('#cClose').addEventListener('click', closeConnect);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeConnect(); });
+document.addEventListener('click', (e) => { if (!e.target.closest('#wal')) setWalMenu(false); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!modal.hidden) closeConnect(); else if (!walMenu.hidden) { setWalMenu(false); walBtn.focus(); } else if (!mnav.hidden) setNav(false);
+});
+$('#automate').addEventListener('click', () => {
+  if (!wallet.connected) openConnect();
+  else toast('Demo: this opens the one-click Autopilot flow.');
+});
+
+/* ---------- canvas helpers ---------- */
+// Sizes are cached by ResizeObserver so the frame loop never forces layout.
+const views = [];
+function register(cv, draw) {
+  const v = { cv, draw, visible: false, w: 0, h: 0, ctx: cv.getContext('2d') };
+  const size = () => {
+    const r = cv.getBoundingClientRect();
+    v.w = Math.max(1, Math.round(r.width)); v.h = Math.max(1, Math.round(r.height));
+    cv.width = v.w * D; cv.height = v.h * D;
+  };
+  new ResizeObserver(size).observe(cv); size();
+  new IntersectionObserver(([e]) => { v.visible = e.isIntersecting; }, { rootMargin: '120px' }).observe(cv);
+  views.push(v); return v;
+}
+function begin(v) { v.ctx.setTransform(D, 0, 0, D, 0, 0); v.ctx.clearRect(0, 0, v.w, v.h); return v.ctx; }
+// Snap to device pixels: crisp squares that still move in sub-CSS-pixel steps.
+const snap = (n) => Math.round(n * D) / D;
+function sq(ctx, x, y, s, color, a = 1) { ctx.globalAlpha = a; ctx.fillStyle = color; ctx.fillRect(snap(x), snap(y), s, s); ctx.globalAlpha = 1; }
+
+/* ---------- sky: pixel clouds, candles and a plane, as document-positioned layers ---------- */
+const skyEl = $('#sky');
+let clouds = [], plane = null;
+function cloudShape() {
+  const w = ri(16, 32), h = ri(6, 10), m = [];
+  const bumps = [[0.28, 0.6, 0.42], [0.52, 0.42, 0.58], [0.76, 0.62, 0.4]];
+  for (let j = 0; j < h; j++) {
+    m[j] = [];
+    for (let i = 0; i < w; i++) {
+      let inside = j >= h * 0.62 && i >= w * 0.06 && i <= w * 0.94;
+      for (const [bx, by, br] of bumps) if (((i - bx * w) / (br * h * 1.25)) ** 2 + ((j - by * h) / (br * h)) ** 2 <= 1) inside = true;
+      m[j][i] = inside;
+    }
+  }
+  return { w, h, m };
+}
+function renderCloud(shape, strong) {
+  const cell = 6, cv = document.createElement('canvas');
+  cv.width = shape.w * cell * D; cv.height = shape.h * cell * D;
+  cv.style.width = shape.w * cell + 'px'; cv.style.height = shape.h * cell + 'px';
+  const ctx = cv.getContext('2d'); ctx.scale(D, D);
+  const base = strong ? C.blue : C['blue-line'], m = shape.m;
+  for (let j = 0; j < shape.h; j++) for (let i = 0; i < shape.w; i++) {
+    if (!m[j][i]) continue;
+    const edge = j === 0 || i === 0 || j === shape.h - 1 || i === shape.w - 1 || !m[j - 1][i] || !(m[j + 1] && m[j + 1][i]) || !m[j][i - 1] || !m[j][i + 1];
+    if (edge) sq(ctx, i * cell, j * cell, cell - 1, j === shape.h - 1 ? C['blue-line'] : base, strong ? 0.85 : 0.75);
+    else if ((i + j) % 2 === 0) sq(ctx, i * cell + 2, j * cell + 2, 2, base, 0.45);
+  }
+  return cv;
+}
+function dustTile() {
+  const s = 520, cv = document.createElement('canvas'); cv.width = s * D; cv.height = s * D;
+  const ctx = cv.getContext('2d'); ctx.scale(D, D); ctx.fillStyle = C['grid-dot'];
+  for (let i = 0; i < 34; i++) ctx.fillRect(ri(0, s - 2), ri(0, s - 2), 2, 2);
+  return cv.toDataURL();
+}
+function candleEl(color) {
+  const s = 3, cv = document.createElement('canvas');
+  cv.width = 3 * s * D; cv.height = 6 * s * D; cv.style.width = 3 * s + 'px'; cv.style.height = 6 * s + 'px';
+  const ctx = cv.getContext('2d'); ctx.scale(D, D); ctx.fillStyle = color; ctx.globalAlpha = 0.85;
+  ctx.fillRect(s, 0, s, s); ctx.fillRect(0, s, s, 4 * s); ctx.fillRect(2 * s, s, s, 4 * s); ctx.fillRect(s, 5 * s, s, s);
+  ctx.globalAlpha = 0.35; ctx.fillRect(s, s, s, 4 * s);
+  cv.className = 'candle';
+  return cv;
+}
+function buildSky() {
+  skyEl.style.height = '0px';
+  const docH = document.documentElement.scrollHeight, W = document.documentElement.clientWidth;
+  skyEl.style.height = docH + 'px';
+  skyEl.replaceChildren();
+  skyEl.style.backgroundImage = `url(${dustTile()})`;
+  skyEl.style.backgroundSize = '520px 520px';
+  clouds = [];
+  const add = (y, strong) => {
+    const shape = cloudShape(), el = renderCloud(shape, strong);
+    el.style.top = Math.round(y) + 'px';
+    const c = { el, x: rand(-200, W), y, wpx: shape.w * 6, speed: rand(6, 15) * (strong ? 1.15 : 0.85) };
+    el.style.transform = `translate3d(${c.x}px,0,0)`;
+    skyEl.append(el); clouds.push(c);
+  };
+  for (let i = 0; i < 6; i++) add(rand(90, 900), i % 3 === 0);
+  for (let y = 1000; y < docH - 300; y += rand(380, 620)) add(y, Math.random() < 0.3);
+  for (let i = 0; i < docH / 150; i++) {
+    const col = Math.random() < 0.5 ? C.spark : (Math.random() < 0.5 ? C['blue-line'] : C.blue);
+    const el = candleEl(col);
+    el.style.left = rand(1, 99) + '%'; el.style.top = Math.round(rand(80, docH - 40)) + 'px';
+    el.style.setProperty('--d', rand(2.6, 4.8).toFixed(2) + 's'); el.style.setProperty('--dl', (-rand(0, 5)).toFixed(2) + 's');
+    skyEl.append(el);
+  }
+  // The plane lives in its own hero-height layer, also in document space.
+  const pc = document.createElement('canvas');
+  pc.style.width = W + 'px'; pc.style.height = '1100px'; pc.width = W * D; pc.height = 1100 * D;
+  skyEl.append(pc);
+  plane = { cv: pc, ctx: pc.getContext('2d'), w: W, x: plane ? plane.x : -160, trail: plane ? plane.trail : [] };
+}
+const PLANE = ['......##....', '#....####...', '###########.', '############', '...######...'];
+function drawSky(dt) {
+  const W = plane ? plane.w : innerWidth, top = scrollY, bot = top + innerHeight;
+  for (const c of clouds) {
+    c.x += c.speed * dt;
+    if (c.x > W + 40) c.x = -c.wpx - rand(20, 300);
+    // Only touch styles for clouds near the viewport.
+    if (c.y > top - 120 && c.y < bot + 60) c.el.style.transform = `translate3d(${c.x.toFixed(2)}px,0,0)`;
+  }
+  if (!plane) return;
+  plane.x += 70 * dt;
+  if (plane.x > W + 200) { plane.x = -160; plane.trail = []; }
+  if (top > 1100) return;
+  const ctx = plane.ctx; ctx.setTransform(D, 0, 0, D, 0, 0); ctx.clearRect(0, 0, W, 1100);
+  const baseY = 760 + Math.sin(plane.x / 170) * 60;
+  const gx = Math.round(plane.x / 6) * 6, gy = Math.round(baseY / 6) * 6;
+  const last = plane.trail[plane.trail.length - 1];
+  if (!last || last[0] !== gx) plane.trail.push([gx, gy]);
+  if (plane.trail.length > 60) plane.trail.shift();
+  plane.trail.forEach(([x, y], k) => sq(ctx, x, y + 9, 5, C['blue-line'], 0.15 + 0.6 * (k / plane.trail.length)));
+  // Draw the body at its exact (sub-cell) position so the motion is smooth; the trail stays on the grid.
+  const px = plane.x, py = baseY;
+  PLANE.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '#') sq(ctx, px + i * 4 - 20, py + j * 4, 4, j === 1 && i === 0 ? C.red : C.plane); }));
+}
+
+/* ---------- position chart: smooth-scrolling live simulation ---------- */
+const STEP = 0.5;
+const pos = { cols: 0, rows: 0, p: [], ir: [], lo: [], hi: [], curLo: 0, curHi: 0, total: 0, acc: 0,
+  value: 13364.8, shown: 13364.8, fees: 61.15, xaero: 10.349, reb: 14, steps: 0, inSteps: 0, sinceX: 0, ui: 0 };
+// Example vault: $12,480 deposited Sep 2. Over the last 30 days it took the better of fee APR and AERO APR
+// each day (DefiLlama daily history): 21 days staked, 9 on fees. Today fees pay more
+// (22.0% vs 15.4%), so swap fees accrue live and xAERO is paused.
+const FEE_PER_SEC = 13364.8 * 0.2199 * 0.978 / 31536000;
+let xClaimed = 217.16;
+function posPush(v) {
+  const ir = v >= pos.curLo && v <= pos.curHi;
+  pos.p.push(v); pos.ir.push(ir); pos.lo.push(pos.curLo); pos.hi.push(pos.curHi);
+  return ir;
+}
+function posInit(cols, rows) {
+  Object.assign(pos, { cols, rows, p: [], ir: [], lo: [], hi: [] });
+  const mid = Math.round(rows * 0.55);
+  pos.curLo = mid - 3; pos.curHi = mid + 3;
+  let v = Math.round(rows * 0.2);
+  for (let i = 0; i < cols + 2; i++) {
+    if (i < cols * 0.15) v += Math.random() < 0.6 ? 1 : 0; else v += [-1, 0, 0, 0, 1][ri(0, 4)];
+    v = clamp(v, 2, rows - 3);
+    if (v > pos.curHi || v < pos.curLo) { pos.curLo = v - 3; pos.curHi = v + 3; }
+    posPush(v);
+  }
+}
+function posStep() {
+  const last = pos.p[pos.p.length - 1];
+  let v = last + [-1, 0, 0, 0, 1][ri(0, 4)];
+  if (Math.random() < 0.05) v += Math.random() < 0.5 ? -3 : 3;
+  if (v > pos.rows * 0.75) v -= 1; if (v < pos.rows * 0.25) v += 1;
+  v = clamp(v, 2, pos.rows - 3);
+  const out = v < pos.curLo || v > pos.curHi, wasOut = !pos.ir[pos.ir.length - 1];
+  // Autopilot re-centres at most one step after the price leaves the range.
+  if (out && (wasOut || Math.random() < 0.5)) { pos.curLo = v - 3; pos.curHi = v + 3; pos.reb++; pos.sinceX = 0; }
+  const ir = posPush(v);
+  ['p', 'ir', 'lo', 'hi'].forEach((k) => pos[k].shift());
+  pos.total++; pos.steps++; if (ir) pos.inSteps++;
+  // While staked the vault earns AERO, not swap fees; value moves with price only.
+  pos.value += (v - last) * rand(0.4, 1.1);
+}
+const posView = register($('#posChart'), (dt) => {
+  const v = posView, cell = 10, cols = Math.floor(v.w / cell), rows = Math.floor(v.h / cell);
+  if (cols !== pos.cols || rows !== pos.rows) posInit(cols, rows);
+  pos.acc += dt;
+  while (pos.acc >= STEP) { pos.acc -= STEP; posStep(); }
+  const frac = pos.acc / STEP, ir = pos.ir[pos.ir.length - 1];
+  if (ir) pos.fees += FEE_PER_SEC * dt;
+  pos.shown += (pos.value - pos.shown) * Math.min(1, dt * 5);
+
+  const ctx = begin(v);
+  const ox = (v.w - cols * cell) / 2, oy = (v.h - rows * cell) / 2;
+  const X = (i) => ox + (i - 1 - frac) * cell;            // index 0 slides off the left, the newest slides in from the right
+  const Y = (r) => v.h - (r + 1) * cell - oy;
+  // Grid dots scroll with the data so the whole field moves together.
+  ctx.fillStyle = C['grid-dot'];
+  for (let i = 0; i < cols + 2; i++) { const x = snap(X(i) + cell / 2); for (let j = 0; j < rows; j++) ctx.fillRect(x, snap(oy + j * cell + cell / 2), 1.5, 1.5); }
+  const n = pos.p.length;
+  for (let i = 0; i < n; i++) {
+    const x = X(i);
+    if ((i + pos.total) % 2 === 0) { sq(ctx, x + 1, Y(pos.hi[i] + 1) + 1, cell - 3, C.range, 0.9); sq(ctx, x + 1, Y(pos.lo[i] - 1) + 1, cell - 3, C.range, 0.9); }
+    const a = pos.p[i], b = i > 0 ? pos.p[i - 1] : a, col = pos.ir[i] ? C.blue : C.red;
+    for (let r = Math.min(a, b); r <= Math.max(a, b); r++) if (r === a || r !== b) sq(ctx, x, Y(r), cell - 2, col);
+  }
+  // Text readouts at ~12 fps; the big number counts smoothly every frame.
+  // The one live number in the card: total earned, streaming with xAERO.
+  $('#earnTotal').textContent = '+' + usd((xClaimed + pos.xaero) * PX.AERO + pos.fees, 4);
+  pos.ui += dt; if (pos.ui < 0.08) return; pos.ui = 0;
+
+  const x = pos.xaero.toFixed(4);
+  $('#rXaero').textContent = x; $('#claimAmt').textContent = x; $('#vX').textContent = x + ' xAERO';
+  $('#rXaeroUsd').textContent = '≈ ' + usd(pos.xaero * PX.AERO);
+  $('#tReady').textContent = pos.xaero.toFixed(2);
+  const xAll = xClaimed + pos.xaero;
+  $('#tXTotal').textContent = `${xAll.toFixed(2)} (${usd(xAll * PX.AERO)})`;
+  $('#vShare').textContent = '$' + SHARE_PRICE.toFixed(5);
+  const chip = $('#rangeChip'); chip.textContent = ir ? 'In range' : 'Out of range'; chip.classList.toggle('out', !ir);
+  $('#tip').textContent = ir ? 'In range · earning fees' : 'Out of range · auto-rebalancing';
+});
+$('#claimBtn').addEventListener('click', () => { toast(`Demo: ${pos.xaero.toFixed(4)} xAERO claimed to your wallet. Your position keeps running.`); xClaimed += pos.xaero; pos.xaero = 0;
+  $('#rClaimed').textContent = $('#tClaimed').textContent = xClaimed.toFixed(2); });
+
+/* ---------- compare: price shock ---------- */
+let cmp = null;
+function runShock() {
+  const cols = 52, rows = 17, low = 3, high = 13, p = [];
+  for (let t = 0; t < cols; t++) {
+    let v;
+    if (t < cols * 0.3) v = low + (Math.random() < 0.15 ? ri(-1, 1) : 0);
+    else if (t < cols * 0.48) v = Math.round(low + (high - low) * ((t - cols * 0.3) / (cols * 0.18))) + ri(-1, 0);
+    else v = high + (Math.random() < 0.2 ? ri(-1, 1) : 0);
+    p.push(clamp(v, 1, rows - 2));
+  }
+  const sim = (kind) => {
+    let lo = low - 1, hi = low + 1, out = 0;
+    const ir = [], L = [], H = [];
+    for (let t = 0; t < cols; t++) {
+      const x = p[t];
+      if (kind === 'auto') {
+        if ((x > hi || x < lo) && Math.random() < 0.85) { lo = x - 1; hi = x + 1; }
+        else if (x === hi && t > cols * 0.3) { lo = x - 1; hi = x + 1; }
+      } else if (kind === 'alm') {
+        out = (x > hi || x < lo) ? out + 1 : 0;
+        if (out >= 2 && t % 3 === 0) { lo = x - 1; hi = x + 1; out = 0; }
+      } else if (t === cols - 4 && (x > hi || x < lo)) { lo = x - 1; hi = x + 1; }
+      ir.push(x >= lo && x <= hi); L.push(lo); H.push(hi);
+    }
+    return { ir, L, H };
+  };
+  cmp = { p, cols, rows, t: 0, start: performance.now(), res: { manual: sim('manual'), auto: sim('auto'), alm: sim('alm') } };
+  $('#shock').disabled = true;
+}
+function cmpStats(k, n) {
+  const r = cmp.res[k]; n = Math.max(1, n);
+  const inr = Math.round(r.ir.slice(0, n).filter(Boolean).length / n * 100);
+  const moves = r.L.slice(0, n).reduce((acc, lo, i) => acc + (i && lo !== r.L[i - 1] ? 1 : 0), 0);
+  return { inr, moves };
+}
+$$('.ccv').forEach((cv) => {
+  const v = register(cv, () => {
+    const ctx = begin(v);
+    if (!cmp) return;
+    const r = cmp.res[cv.dataset.strat];
+    const cell = Math.max(5, Math.floor(v.w / cmp.cols)), s = cell - 1;
+    const ox = Math.round((v.w - cmp.cols * cell) / 2), oy = Math.round((v.h - cmp.rows * cell) / 2);
+    const Y = (row) => oy + (cmp.rows - 1 - row) * cell;
+    const full = Math.floor(cmp.t), head = cmp.t - full;
+    ctx.fillStyle = C['grid-dot'];
+    for (let i = 0; i < cmp.cols; i += 2) for (let j = 0; j < cmp.rows; j += 3) ctx.fillRect(ox + i * cell + 2, oy + j * cell + 2, 1.5, 1.5);
+    for (let i = 0; i <= Math.min(full, cmp.cols - 1); i++) {
+      const a = i < full ? 1 : head;                  // the newest column fades in instead of popping
+      if (a <= 0) continue;
+      if (i % 2 === 0) { sq(ctx, ox + i * cell, Y(r.H[i] + 1), s, C.range, 0.85 * a); sq(ctx, ox + i * cell, Y(r.L[i] - 1), s, C.range, 0.85 * a); }
+      const pa = cmp.p[i], pb = i ? cmp.p[i - 1] : pa, col = r.ir[i] ? C.blue : C.red;
+      for (let row = Math.min(pa, pb); row <= Math.max(pa, pb); row++) sq(ctx, ox + i * cell, Y(row), s, col, a);
+    }
+    for (let j = 0; j < cmp.rows; j += 2) sq(ctx, ox + cmp.cols * cell, oy + j * cell, 2, C.range, 0.6);
+  });
+});
+function updateCmpStats() {
+  const n = Math.min(cmp.cols, Math.ceil(cmp.t));
+  const m = cmpStats('manual', n), a = cmpStats('auto', n), t = cmpStats('alm', n);
+  $('#st-manual').innerHTML = `In range <span class="r">${m.inr}%</span> · costly rebalances <span class="r">${m.moves}</span>`;
+  $('#st-auto').innerHTML = `In range <span class="b">${a.inr}%</span> · value lost <span class="b">0</span>`;
+  $('#st-alm').innerHTML = `In range <span class="k">${t.inr}%</span> · costly rebalances <span class="r">${t.moves}</span>`;
+}
+$('#shock').addEventListener('click', runShock);
+new IntersectionObserver(([e], o) => { if (e.isIntersecting) { runShock(); o.disconnect(); } }, { threshold: 0.35 }).observe($('.cmp'));
+
+/* ---------- how it works: a pulse travels through the steps ---------- */
+const steps = $$('.step');
+let howT = 0, nodes = [];
+const howView = register($('#howLine'), (dt) => {
+  const v = howView, ctx = begin(v), cell = 8, y = Math.round(v.h / 2 / cell) * cell - 4, n = Math.floor(v.w / cell);
+  howT = (howT + dt * 12) % (n + 14);
+  for (let i = 0; i < n; i++) {
+    const d = howT - i, isNode = nodes.includes(i);
+    if (d >= 0 && d < 10) sq(ctx, i * cell, y, cell - 2, C.blue, Math.min(1, d + 0.2) * (1 - d / 10));
+    else if (isNode) sq(ctx, i * cell, y, cell - 2, C.range);
+    else if (i % 2 === 0) sq(ctx, i * cell + 2, y + 2, 2, C.range, 0.7);
+    if (isNode) { ctx.strokeStyle = d >= 0 && d < 30 ? C.blue : C.range; ctx.lineWidth = 1.5; ctx.strokeRect(i * cell - 4.5, y - 4.5, cell + 7, cell + 7); }
+  }
+  steps.forEach((el, k) => { const d = howT - nodes[k]; el.classList.toggle('lit', d >= 0 && d < 30); });
+});
+new ResizeObserver(() => {
+  const base = $('#howLine').getBoundingClientRect();
+  nodes = steps.map((el) => Math.round((el.getBoundingClientRect().left - base.left + 22) / 8));
+}).observe($('.steps'));
+
+/* ---------- markets sparkline grid: smooth scroll ---------- */
+const SP_STEP = 0.6;
+const sp = { series: [], hl: 3, acc: 0, hlAcc: 0, total: 0 };
+for (let k = 0; k < 8; k++) {
+  const s = []; let val = ri(3, 6);
+  for (let i = 0; i < 34; i++) { val = clamp(val + [-1, 0, 0, 1][ri(0, 3)], 1, 8); s.push(val); }
+  sp.series.push({ s, flat: k >= 4 });
+}
+const spView = register($('#spark'), (dt) => {
+  const v = spView, ctx = begin(v);
+  sp.acc += dt; sp.hlAcc += dt;
+  while (sp.acc >= SP_STEP) {
+    sp.acc -= SP_STEP; sp.total++;
+    sp.series.forEach((o) => {
+      const last = o.s[o.s.length - 1];
+      o.s.push(clamp(last + (o.flat ? (Math.random() < 0.15 ? ri(-1, 1) : 0) : [-1, 0, 0, 1][ri(0, 3)]), 1, 8)); o.s.shift();
+    });
+  }
+  if (sp.hlAcc > 2.4) { sp.hlAcc = 0; sp.hl = (sp.hl + ri(1, 7)) % 8; }
+  const frac = sp.acc / SP_STEP, gap = 36, cw = (v.w - gap) / 2, ch = v.h / 4, cell = Math.max(5, Math.floor(cw / 32));
+  sp.series.forEach((o, k) => {
+    const cx = (k % 2) * (cw + gap), cy = Math.floor(k / 2) * ch + 8;
+    const col = k === sp.hl ? C.blue : C.spark, Y = (val) => cy + (9 - val) * cell;
+    ctx.save(); ctx.beginPath(); ctx.rect(cx, cy - cell, 32 * cell, ch); ctx.clip();
+    for (let i = 0; i < o.s.length; i++) {
+      const x = cx + (i - 1 - frac) * cell, a = o.s[i], b = i ? o.s[i - 1] : a;
+      for (let r = Math.min(a, b); r <= Math.max(a, b); r++) sq(ctx, x, Y(r), cell - 1, col);
+      if ((i + sp.total) % 3 === 0) sq(ctx, x + 1, Y(a) + cell * 2 + 1, 2, col, 0.5);
+    }
+    ctx.restore();
+  });
+});
+
+/* ---------- main loop ---------- */
+let lastT = performance.now(), rebuildT;
+const rebuild = () => { clearTimeout(rebuildT); rebuildT = setTimeout(buildSky, 200); };
+buildSky();
+addEventListener('resize', rebuild);
+addEventListener('load', rebuild);
+if (document.fonts) document.fonts.ready.then(rebuild);
+function frame(now) {
+  let dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+  if (reduce) dt *= 0.15;
+  drawSky(dt);
+  if (cmp && cmp.t < cmp.cols) {
+    cmp.t = Math.min(cmp.cols, (now - cmp.start) / 1000 * (reduce ? 40 : 16));
+    updateCmpStats();
+    if (cmp.t >= cmp.cols) $('#shock').disabled = false;
+  }
+  for (const v of views) if (v.visible) v.draw(dt);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

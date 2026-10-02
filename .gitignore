@@ -1,0 +1,10 @@
+# Confidential RFP + reference screenshots: never commit
+ref/
+
+# Vercel link + secrets
+.vercel/
+.env*
+
+# OS / editor
+.DS_Store
+Thumbs.db

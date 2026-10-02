@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requirements checklist · Autopilot by Harvest</title>
+<meta name="description" content="Aerodrome's Autopilot ALM partner requirements, and how Harvest meets each one.">
+<!-- Shared from the landing page footer only; keep it out of search results. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1F55F0">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#FAFAFC;--surface:#FFFFFF;--surface-2:#F4F5F8;--line:#E4E6EC;--line-2:#EEF0F4;
+  --ink:#0E1116;--muted:#555B6B;--faint:#6F7586;
+  --blue:#1F55F0;--blue-ink:#1747D6;--blue-soft:#EAF0FF;--blue-line:#AFC3FF;
+  --green:#15803D;--green-soft:#EFFBF3;--green-line:#A6E3BC;
+  --amber:#9A5B00;--amber-soft:#FFF6E5;--amber-line:#F2D29B;
+  --sans:Inter,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+:root[data-theme=dark]{
+  --bg:#0A0C11;--surface:#11141B;--surface-2:#171B24;--line:#252A35;--line-2:#1D212B;
+  --ink:#EEF0F5;--muted:#A6ACBA;--faint:#8A90A0;
+  --blue:#5482FF;--blue-ink:#7A9DFF;--blue-soft:#141D3D;--blue-line:#2D3F80;
+  --green:#3DD68C;--green-soft:#0D2519;--green-line:#1E5A3A;
+  --amber:#F5B544;--amber-soft:#2A1F0A;--amber-line:#5C4313;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo b{display:block;font-size:19px;font-weight:600;line-height:1.1}
+.logo small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.back{margin-left:auto;font-size:15px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font:inherit;font-size:14px;cursor:pointer;color:inherit}
+.btn:hover{border-color:var(--blue-line)}
+main{max-width:1180px;margin:0 auto;padding:40px 24px 40px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1{margin:10px 0 0;font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.lede{font-size:15px;color:var(--muted);max-width:640px;margin:6px 0 0}
+.summary{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.summary span{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:1px solid var(--line);background:var(--surface);border-radius:999px;font-size:14px}
+.summary b{font-family:var(--mono);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:22px;font-size:14px;color:var(--muted)}
+.legend>span{display:inline-flex;align-items:center;gap:8px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.toc a{font-size:14px;text-decoration:none;color:var(--muted);padding:6px 12px;border-radius:6px;background:var(--surface-2)}
+.toc a:hover{color:var(--ink)}
+section{margin-top:36px;scroll-margin-top:84px}
+h2{margin:0;font-size:18px;font-weight:600;letter-spacing:-.02em}
+h2 small{display:block;font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px}
+table{width:100%;border-collapse:separate;border-spacing:0;margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+thead th{text-align:left;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+thead th:first-child{width:48%}
+tbody td{vertical-align:top;padding:16px 18px;border-bottom:1px solid var(--line-2)}
+tbody tr:last-child td{border-bottom:none}
+tbody td:first-child{border-right:1px solid var(--line-2)}
+.ref{font-family:var(--mono);font-size:12px;color:var(--blue);margin-right:8px}
+.req b{font-weight:600}
+.req p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.ans{display:flex;gap:12px;align-items:flex-start}
+.yes{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--green-soft);border:1px solid var(--green-line);color:var(--green);font-size:13px;font-weight:600}
+.yes svg{flex-shrink:0}
+.ans p{margin:0;font-size:15px}
+.st{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:4px;border:1px solid var(--line);color:var(--muted);background:var(--surface-2)}
+.st.build{color:var(--blue-ink);border-color:var(--blue-line);background:var(--blue-soft)}
+.st.data{color:var(--amber);border-color:var(--amber-line);background:var(--amber-soft)}
+.note{margin-top:56px;padding:20px 22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:15px;color:var(--muted)}
+.note b{color:var(--ink)}
+footer{border-top:1px solid var(--line);margin-top:72px}
+.foot{max-width:1180px;margin:0 auto;padding:32px 24px 48px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+@media (max-width:760px){
+  .logo small,.back{display:none}
+  .nav-in{padding:12px 16px}
+  main{padding:40px 16px 24px}
+  thead{display:none}
+  table,tbody,tr,td{display:block;width:100%}
+  tbody tr{border-bottom:1px solid var(--line)}
+  tbody tr:last-child{border-bottom:none}
+  tbody td{border:none!important;padding:14px 16px 0}
+  tbody td+td{padding:10px 16px 16px}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface-2:#f6f6f8}
+  .nav{display:none!important}
+  main{padding:0 0 12px;max-width:none}
+  h1{font-size:30px}
+  section{margin-top:28px;break-inside:auto}
+  table{border-radius:0}
+  tr{break-inside:avoid}
+  footer{margin-top:24px}
+  a{text-decoration:none}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-in">
+    <a class="logo" href="/" aria-label="Autopilot home">
+      <svg width="38" height="26" viewBox="0 0 19 13" shape-rendering="crispEdges" aria-hidden="true"><g fill="var(--blue)"><rect x="7" y="0" width="5" height="1"/><rect x="5" y="1" width="9" height="1"/><rect x="2" y="2" width="15" height="1"/><rect x="1" y="3" width="17" height="4"/><rect x="0" y="5" width="19" height="2"/></g><g fill="var(--blue)" opacity=".55"><rect x="3" y="10" width="2" height="2"/><rect x="9" y="10" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/></g></svg>
+      <span><b>Autopilot</b><small>by Harvest</small></span>
+    </a>
+    <a class="back" href="/">← Back to site</a>
+  </div>
+</header>
+
+<main>
+  <div class="eyebrow">Requirements checklist</div>
+  <h1>Aerodrome's requirements, and how Harvest meets them.</h1>
+  <p class="lede">From the Autopilot ALM partner brief and Q&amp;A, with Harvest's answer to each.</p>
+
+  <section id="hard">
+    <h2>Hard requirements<small>Section 2</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="build"><td class="req"><span class="ref">2.1</span><b>Onchain-first vault state</b><p>Registry, pool, positions and ranges, deposits, share supply, fees, xAERO/AERO rewards, caps, strategy version and performance accumulators readable via view calls or events. The UI renders only from chain.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Every one of these is exposed through view functions and events. Aerodrome's UI needs no Harvest API or indexer.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.2</span><b>No emissions compounding</b><p>Never sell, swap or convert xAERO/AERO rewards into LP assets. Rewards flow to share holders per share, computable from chain.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>The Autopilot vault passes xAERO through per share and never sells or compounds it. This is a dedicated build, separate from Harvest's existing auto-compounding vaults.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.3</span><b>Flexible fee routing</b><p>A fee on emissions and/or swap fees, configurable onchain, adjustable over time and per vault.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Fee share on emissions and swap fees is set per vault onchain and adjustable behind the parameter timelock.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.4</span><b>Vault caps</b><p>Per-vault total and per-user caps enforced at deposit. Raises need both Aerodrome and provider multisigs; lowers can come from the provider alone.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Caps in pool liquidity units, enforced in <code>deposit</code>. Raises require both multisigs; Harvest can lower alone. Open to a monthly review plus an 80% utilization trigger.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.6</span><b>ERC-4626 vaults</b><p>Transferable, composable shares; a share price resistant to one-block manipulation. Deviations argued and documented (e.g. ERC-7540).</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>ERC-4626 shares, transferable and composable with Aerodrome's gauges. Share price comes from vault accounting, not an external oracle, so it can't be moved within one block. Any extension will be documented.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.8</span><b>Single-chain vaults, full footprint</b><p>One vault per pool per chain, no cross-chain logic. Support every Aero chain now and new ones within about 30 days.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>One vault per pool per chain. Harvest commits to every chain Aero runs on, and to new Aero chains within 30 days of launch.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.9</span><b>No mixing or routing to competing AMMs</b><p>No mixed share tokens, no routing Aerodrome LP capital to other venues. Disclose existing competing-DEX commitments.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Autopilot vaults hold Aerodrome positions only and route nowhere else. Existing commitments on other DEXes will be disclosed in full.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="v3">
+    <h2>V3 architectural alignment<small>Section 2.7</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>Continuous allocation</b><p>No epochs; per-second drip; gauge rates can change at any time.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Accounting accrues per second with no epoch assumptions anywhere in the strategy.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>xAERO redemption</b><p>Pass xAERO through to LPs or redeem on their behalf, with gas borne transparently by the LP.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>xAERO is passed through to LPs in kind and claimable any time. LPs redeem to AERO themselves, so no hidden gas is charged.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>Lazy fee and emission settlement</b><p>Vault accounting reconciles against the gauge's lazily settled state.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>The vault settles against the gauge on every state change and distinguishes fresh from lazily settled values in its views.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>Per-gauge emission caps</b><p>Strategy must not break when a gauge's rate drops mid-period.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Rate drops are a normal input to the staked/unstaked decision, never an error path.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>MEV-aware rebalancing</b><p>Rebalances must not leak value through vanilla AMM swaps; handle priority-fee and dynamic-fee conditions.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Rebalances are sized and timed around priority fees and dynamic pool fees, and abort on failed safety checks (slippage, value-loss bounds) instead of executing unsafely.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>Staked / unstaked liquidity</b><p>Document how shares coexist with the staked position NFT; support both modes with a sensible policy.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>The vault holds the position NFT and shares represent a claim on it. Blue-chip pools stay staked; long-tail pools switch between fees and emissions within the policy we codify with you.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>TokenRegistry</b><p>Specify behavior for tokens not yet listed.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>For unlisted tokens the vault runs unstaked in fee mode and stakes once the token is listed and the gauge is active.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.7</span><b>pauseChain / suspendChain</b><p>Specify behavior when governance pauses or suspends the leaf chain.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Rebalancing halts safely; deposits pause; withdrawals and emergency exits stay open.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="security">
+    <h2>Security baseline<small>Section 2.5</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>Tier-1 audit of the exact deployed code</b><p>Public reports, remediations linked to PR diffs.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>The Autopilot vault will be audited by a listed tier-1 firm before go-live, with public reports and linked fixes.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>Bug bounty of at least $50k</b><p>On Immunefi or an equivalent tier-1 platform.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>A bounty of at least $50k covering the Autopilot contracts.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>3-of-5 or stricter multisig</b><p>Documented signer set; identities disclosable under NDA.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Admin keys behind a 3-of-5 or stricter multisig; signers disclosed to Dromos under NDA.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>Timelocks</b><p>48 hours on parameter changes; 7 days on upgrades and admin role changes.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>48-hour and 7-day timelocks as specified.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">2.5</span><b>Non-custodial emergency withdraw</b><p>Contract-enforced, no keeper cooperation needed.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Any LP can burn shares for the underlying tokens directly against the contract, even with the keeper offline.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>Verified source, reproducible builds</b><p>On every supported chain.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Source-verified with reproducible builds on every chain we deploy to.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>Incident response</b><p>Documented plan, on-call rotation, public security contact.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Written plan, staffed on-call rotation and a public security contact.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">2.5</span><b>At least 12 months runway</b><p>Disclosed under NDA at deal close.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Runway disclosed to Dromos under NDA.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="ops">
+    <h2>Operational and partnership obligations<small>Section 3</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>Treat Autopilot as a flagship surface</b><p>Co-responsible, not a side integration left to age.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Autopilot gets a dedicated owner on the Harvest team and its own front end, starting with this site.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>Incident communication</b><p>Public acknowledgement within 1 hour; root-cause analysis within 72 hours.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>1-hour public acknowledgement and 72-hour public RCA for any LP-affecting event.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>24/7 keeper coverage</b><p>On-call rotation, redundant infrastructure, an escalation path Dromos can reach.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Redundant keepers, 24/7 on-call and a direct escalation line for Dromos.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>Reporting</b><p>Weekly status in a shared channel; monthly performance report for every vault by the 5th.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Weekly status message and a monthly per-vault report by the 5th.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>Flag material changes the same day</b><p>Strategy, parameters or admin set.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Same-day notice to Dromos for any planned material change.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3 · 4.3</span><b>Co-marketing</b><p>Joint launch plus at least 6 pieces in the first 90 days, then at least one a month.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Joint launch, 6 or more joint pieces in the first 90 days, at least one a month after, coordinated with Aerodrome's team.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>LP education</b><p>Plain-language docs on strategy, IL and risk; never "passive income with no risk".</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Plain-language LP docs on strategy, impermanent loss and risk. No "risk-free" positioning anywhere.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">3</span><b>Proactive UX feedback</b><p>Flag UI issues and propose improvements without waiting to be asked.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Regular UX proposals to Dromos product and engineering.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="kpis">
+    <h2>KPIs and targets<small>Section 4</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="ok"><td class="req"><span class="ref">4.1</span><b>TVL and chain milestones</b><p>T+30: ≥$3M, Base, Ethereum, Arc, Optimism · T+90: ≥$6M, all launch chains · T+180: ≥$15M, parity with Aerodrome · T+365: ≥$30M, continued parity.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Targets and chain cadence accepted as written.</p></div></div></td></tr>
+        <tr data-st="data"><td class="req"><span class="ref">4.2</span><b>Outperform the pool-average non-ALM LP</b><p>On APR and on emissions/fees ratio, rolling 90 days.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Accepted as performance gates. Backtest on your basis (position value vs 50/50 hodl, full-range LP as a second baseline) to follow.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">4.2</span><b>≥90% time in range on blue chips</b><p>Rolling 90 days.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Target accepted, reported monthly per vault.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">4.2</span><b>≥99.5% rebalance reliability</b><p>Protective aborts don't count as failures.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Target accepted; every attempted and aborted rebalance logged onchain.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">4.3</span><b>Keeper uptime ≥99.9% per quarter</b><p>Plus the incident, reporting and co-marketing SLAs above.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Accepted, with uptime included in the monthly report.</p></div></div></td></tr>
+        <tr data-st="build"><td class="req"><span class="ref">4.4</span><b>LP transparency</b><p>Registry, positions, ranges, caps, share price, fees and pending xAERO via view calls · queryable share-price history · per-LP claimable and pending xAERO in the UI.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>All exposed onchain, including per-LP claimable and pending xAERO. The LP view on this site shows exactly those values.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="commercial">
+    <h2>Commercial terms<small>Section 5</small></h2>
+    <table>
+      <thead><tr><th scope="col">Aerodrome requires</th><th scope="col">Harvest</th></tr></thead>
+      <tbody>
+        <tr data-st="ok"><td class="req"><span class="ref">5.1</span><b>Compensation through the sAERO revenue right</b><p>Product fees go to the Momentum Fund; no separate partner fee carve-out in the initial phase.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Accepted.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">5.3</span><b>Performance gates</b><p>Two or more gate failures in two consecutive quarters pause revenue rights; 90 days to cure.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Accepted.</p></div></div></td></tr>
+        <tr data-st="ok"><td class="req"><span class="ref">5.4</span><b>Brand and attribution</b><p>"Autopilot" remains a Dromos brand; partner attribution is "powered by [partner]" only.</p></td>
+          <td><div class="ans"><span class="yes">Yes</span><div><p>Attribution as "Autopilot, powered by Harvest", with no other brand rights claimed.</p></div></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="note"><b>How to read this page.</b> Every "Yes" is Harvest's commitment to meet the requirement. "Building for launch" marks work on the dedicated Autopilot vault that is in progress; "Evidence pending" marks data we will share as it becomes available.</p>
+</main>
+
+<footer>
+  <div class="foot"><span>Autopilot, powered by Harvest</span><span>© 2026 Harvest Finance</span></div>
+</footer>
+
+<script>
+(() => {
+  try { const t = localStorage.getItem('ap-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  const CHECK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+  const LABEL = { ok: ['', 'Committed'], build: ['build', 'Building for launch'], data: ['data', 'Evidence pending'] };
+  const rows = [...document.querySelectorAll('tbody tr[data-st]')];
+  const counts = { ok: 0, build: 0, data: 0 };
+  rows.forEach((tr) => {
+    const [cls, text] = LABEL[tr.dataset.st]; counts[tr.dataset.st]++;
+    tr.querySelector('.yes').innerHTML = CHECK + 'Yes';
+    const tag = document.createElement('span'); tag.className = 'st ' + cls; tag.textContent = text;
+    tr.querySelector('.ans > div').append(tag);
+  });
+})();
+</script>
+</body>
+</html>
