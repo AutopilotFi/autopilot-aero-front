@@ -1022,10 +1022,12 @@ function buildSky() {
   };
   for (let i = 0; i < 6; i++) add(rand(90, 900), i % 3 === 0);
   for (let y = 1000; y < docH - 300; y += rand(380, 620)) add(y, Math.random() < 0.3);
-  for (let i = 0; i < docH / 150; i++) {
+  const gutter = (W - 1360) / 2 + 24;
+  for (let i = 0; gutter >= 70 && i < docH / 150; i++) {
     const col = Math.random() < 0.5 ? C.spark : (Math.random() < 0.5 ? C['blue-line'] : C.blue);
     const el = candleEl(col);
-    el.style.left = rand(1, 99) + '%'; el.style.top = Math.round(rand(80, docH - 40)) + 'px';
+    const side = Math.random() < 0.5, x = side ? rand(10, gutter - 30) : rand(W - gutter + 20, W - 20);
+    el.style.left = Math.round(x) + 'px'; el.style.top = Math.round(rand(80, docH - 40)) + 'px';
     el.style.setProperty('--d', rand(2.6, 4.8).toFixed(2) + 's'); el.style.setProperty('--dl', (-rand(0, 5)).toFixed(2) + 's');
     skyEl.append(el);
   }
