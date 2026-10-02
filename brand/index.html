@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand · Autopilot by Harvest</title>
+<meta name="description" content="Autopilot brand kit: the pixel mark, colors, type and usage.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1F55F0">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#FAFAFC;--surface:#FFFFFF;--surface-2:#F4F5F8;--line:#E4E6EC;--line-2:#EEF0F4;
+  --ink:#0E1116;--muted:#555B6B;--blue:#1F55F0;--blue-ink:#1747D6;--blue-soft:#EAF0FF;--blue-line:#AFC3FF;
+  --sans:Inter,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+:root[data-theme=dark]{
+  --bg:#0A0C11;--surface:#11141B;--surface-2:#171B24;--line:#252A35;--line-2:#1D212B;
+  --ink:#EEF0F5;--muted:#A6ACBA;--blue:#5482FF;--blue-ink:#7A9DFF;--blue-soft:#141D3D;--blue-line:#2D3F80;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo b{display:block;font-size:19px;font-weight:600;line-height:1.1}
+.logo small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.back{margin-left:auto;font-size:15px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+main{max-width:1180px;margin:0 auto;padding:40px 24px 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1{margin:10px 0 0;font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.lede{font-size:15px;color:var(--muted);max-width:640px;margin:6px 0 0}
+section{margin-top:44px}
+h2{margin:0 0 14px;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tile{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);display:flex;flex-direction:column}
+.stage{height:200px;display:flex;align-items:center;justify-content:center;gap:14px}
+.stage.light{background:#FAFAFC}.stage.blue{background:#1F55F0;color:#fff}.stage.white{background:#fff}
+.stage.grid-bg{background-color:#FAFAFC;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect x='5' y='5' width='2' height='2' fill='%230E1116' fill-opacity='.07'/%3E%3C/svg%3E")}
+.cap{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--line);font-size:14px}
+.cap span{color:var(--muted)}
+.dl{font-family:var(--mono);font-size:12px;color:var(--blue-ink);text-decoration:none;padding:4px 8px;border:1px solid var(--blue-line);border-radius:6px;background:var(--blue-soft);white-space:nowrap}
+.dl:hover{border-color:var(--blue)}
+.word{font-size:34px;font-weight:600;letter-spacing:-.03em}
+.stage.light .word{color:#0E1116}
+/* construction grid */
+.build{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
+.pix{display:grid;grid-template-columns:repeat(16,1fr);gap:2px;max-width:420px;width:100%;aspect-ratio:1;padding:2px;background:var(--line-2);border-radius:10px}
+.pix i{display:block;background:var(--surface);border-radius:1px}
+.pix i.l{background:#4C7BF7}.pix i.s{background:#1F55F0}
+.rules{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.rules li{display:flex;gap:12px;font-size:15px}
+.rules b{display:block;font-weight:600}
+.rules span{color:var(--muted)}
+.dot{width:12px;height:12px;flex-shrink:0;margin-top:5px}
+.sizes{display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.sizes figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.sizes figcaption{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sizes img{image-rendering:pixelated}
+/* colors */
+.sw{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);text-align:left;padding:0;font:inherit;color:inherit;cursor:pointer}
+.sw:hover{border-color:var(--blue-line)}
+.sw .chip{height:88px}
+.sw .meta{padding:10px 12px}
+.sw b{display:block;font-size:15px;font-weight:600}
+.sw code{font-family:var(--mono);font-size:13px}
+.sw small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+/* type */
+.type{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:22px}
+.type .big{font-size:40px;font-weight:600;letter-spacing:-.035em;line-height:1.1;margin-top:8px}
+.type .mono{font-family:var(--mono);font-size:28px;margin-top:8px}
+.type small{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.type p{margin:10px 0 0;color:var(--muted);font-size:14px}
+.note{padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:15px;color:var(--muted)}
+.note b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;z-index:50;background:#0E1116;color:#fff;padding:10px 16px;border-radius:8px;font-family:var(--mono);font-size:13px;transition:all .2s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.build{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .logo small,.back{display:none}.nav-in{padding:12px 16px}main{padding:28px 16px 0}
+  .g3,.g2{grid-template-columns:minmax(0,1fr)}.stage{height:160px}.word{font-size:28px}
+}
+/* Mark: one pixel arrow (the favicon), colors set per context */
+.mark-arrow{display:block;flex-shrink:0;--a-lit:#4C7BF7;--a-shade:#1F55F0}
+.mark-arrow.inv{--a-lit:#FFFFFF;--a-shade:#C9D7FF}
+/* Pixel footer in flagship blue */
+.site-foot{position:relative;z-index:1;margin-top:120px;background:#1F55F0;color:#FFFFFF;overflow:hidden}
+.site-foot::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='2' height='2' fill='%23fff' fill-opacity='.16'/%3E%3C/svg%3E");pointer-events:none}
+.sf-in{position:relative;max-width:1360px;margin:0 auto;padding:64px 24px 32px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);gap:40px}
+.sf-logo{display:inline-flex;align-items:center;gap:14px;color:#FFFFFF;text-decoration:none}
+.sf-logo b{font-size:26px;font-weight:600;letter-spacing:-.02em}
+.sf-brand p{margin:14px 0 0;font-size:17px;color:rgba(255,255,255,.88)}
+.sf-brand .sf-small{margin-top:6px;font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.7)}
+.sf-col{display:flex;flex-direction:column;gap:10px}
+.sf-col h4{margin:0 0 4px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.sf-col a{color:#FFFFFF;text-decoration:none;font-size:16px;width:fit-content}
+.site-foot :focus-visible{outline-color:#FFFFFF}
+.sf-bar{position:relative;max-width:1360px;margin:0 auto;padding:18px 0 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.75);border-top:1px solid rgba(255,255,255,.2);width:min(1312px,calc(100% - 48px))}
+.sf-sky{position:relative;height:112px;margin-top:28px;background:url(/assets/brand/footer-sky.svg) repeat-x left bottom/720px 112px}
+@media (max-width:760px){
+  .sf-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:48px 16px 24px;gap:28px}
+  .sf-brand{grid-column:1/-1}
+  .sf-bar{width:calc(100% - 32px)}
+  .sf-sky{height:84px;background-size:540px 84px}
+}
+/* Pixel hover: stepped dotted underline (menu) and a pixel pointer (footer) */
+.links a,.back{position:relative}
+.links a::after,.back::after{content:"";position:absolute;left:0;bottom:-6px;height:3px;width:0;background:repeating-linear-gradient(90deg,var(--blue) 0 3px,transparent 3px 5px);transition:width .32s steps(6,end)}
+.links a:hover::after,.links a:focus-visible::after,.back:hover::after,.back:focus-visible::after{width:100%}
+.sf-col a{position:relative;transition:transform .24s steps(3,end)}
+.sf-col a::before{content:"";position:absolute;left:-15px;top:50%;width:3px;height:3px;margin-top:-5px;background:#fff;box-shadow:0 3px 0 #fff,3px 3px 0 #fff,0 6px 0 #fff;opacity:0;transform:translateX(-6px);transition:opacity .2s steps(2,end),transform .24s steps(3,end)}
+.sf-col a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px);transition:width .3s steps(6,end)}
+.sf-col a:hover,.sf-col a:focus-visible{transform:translateX(15px);text-decoration:none}
+.sf-col a:hover::before,.sf-col a:focus-visible::before{opacity:1;transform:none}
+.sf-col a:hover::after,.sf-col a:focus-visible::after{width:100%}
+@media (prefers-reduced-motion:reduce){.links a::after,.back::after,.sf-col a,.sf-col a::before,.sf-col a::after{transition:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="apa" viewBox="0 0 16 16" shape-rendering="crispEdges"><g fill="var(--a-lit,#4C7BF7)"><rect x="7" y="0" width="1" height="1"/><rect x="7" y="1" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/><rect x="7" y="14" width="1" height="1"/><rect x="7" y="15" width="1" height="1"/></g><g fill="var(--a-shade,#1F55F0)"><rect x="8" y="0" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="10" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/><rect x="12" y="11" width="1" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="8" y="13" width="1" height="1"/><rect x="8" y="14" width="1" height="1"/><rect x="9" y="14" width="1" height="1"/><rect x="8" y="15" width="1" height="1"/></g></symbol>
+</svg>
+<header class="nav">
+  <div class="nav-in">
+    <a class="logo" href="/" aria-label="Autopilot home">
+      <svg class="mark-arrow" width="34" height="34" aria-hidden="true"><use href="#apa"/></svg>
+      <span><b>Autopilot</b><small>by Harvest</small></span>
+    </a>
+    <a class="back" href="/">← Back to site</a>
+  </div>
+</header>
+
+<main>
+  <div class="eyebrow">Brand</div>
+  <h1>The Autopilot mark, colors and type.</h1>
+  <p class="lede">A pixel arrow pointing up, shaped like a plane, drawn on a 16×16 grid. It is the favicon, the menu logo and the footer logo, unchanged.</p>
+
+  <section>
+    <h2>Logo</h2>
+    <div class="grid g4">
+      <div class="tile"><div class="stage light"><svg class="mark-arrow" width="96" height="96" aria-hidden="true"><use href="#apa"/></svg></div><div class="cap"><span>Mark · on light</span><a class="dl" href="/assets/brand/autopilot-mark.svg" download>SVG</a></div></div>
+      <div class="tile"><div class="stage blue"><svg class="mark-arrow inv" width="96" height="96" aria-hidden="true"><use href="#apa"/></svg></div><div class="cap"><span>Mark · inverse on blue</span><a class="dl" href="/assets/brand/autopilot-mark-inverse.svg" download>SVG</a></div></div>
+      <div class="tile"><div class="stage white"><svg class="mark-arrow" width="96" height="96" aria-hidden="true" style="--a-lit:#0E1116;--a-shade:#0E1116"><use href="#apa"/></svg></div><div class="cap"><span>Mark · mono</span><a class="dl" href="/assets/brand/autopilot-mark-mono.svg" download>SVG</a></div></div>
+      <div class="tile"><div class="stage light"><img src="/assets/brand/autopilot-app-icon.svg" width="96" height="96" alt="" style="border-radius:22px"></div><div class="cap"><span>App icon</span><a class="dl" href="/assets/brand/autopilot-app-icon.svg" download>SVG</a></div></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="tile"><div class="stage light"><svg class="mark-arrow" width="48" height="48" aria-hidden="true"><use href="#apa"/></svg><span class="word">Autopilot</span></div><div class="cap"><span>Lockup · on light</span><a class="dl" href="/assets/brand/autopilot-lockup.svg" download>SVG</a></div></div>
+      <div class="tile"><div class="stage blue"><svg class="mark-arrow inv" width="48" height="48" aria-hidden="true"><use href="#apa"/></svg><span class="word">Autopilot</span></div><div class="cap"><span>Lockup · inverse</span><a class="dl" href="/assets/brand/autopilot-lockup-inverse.svg" download>SVG</a></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Construction</h2>
+    <div class="build">
+      <div class="pix" id="pix" role="img" aria-label="The mark on its 16 by 16 pixel grid"></div>
+      <ul class="rules">
+        <li><span class="dot" style="background:#4C7BF7"></span><div><b>Arrowhead</b><span>A 2-pixel tip widening by one pixel per side every two rows, 10 pixels wide at the shoulder.</span></div></li>
+        <li><span class="dot" style="background:#1F55F0"></span><div><b>Notch</b><span>An upside-down V cut three rows deep: the tail of a plane.</span></div></li>
+        <li><span class="dot" style="background:linear-gradient(90deg,#4C7BF7 50%,#1F55F0 50%)"></span><div><b>Two faces and the trail</b><span>Left half Lit Blue, right half Flagship Blue. A 2–4–2 pixel diamond trails below.</span></div></li>
+        <li><span class="dot" style="background:var(--line)"></span><div><b>Clear space and size</b><span>Keep 2 grid pixels clear on every side. Smallest size 16 px.</span></div></li>
+        <li><span class="dot" style="background:var(--line)"></span><div><b>Square pixels only</b><span>Render with crisp edges; never blur, round, rotate or redraw the arrow.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Favicon</h2>
+    <div class="sizes">
+      <figure><img src="/assets/favicon.svg" width="16" height="16" alt="Favicon at 16 pixels"><figcaption>16</figcaption></figure>
+      <figure><img src="/assets/favicon-32.png" width="32" height="32" alt="Favicon at 32 pixels"><figcaption>32</figcaption></figure>
+      <figure><img src="/assets/favicon.svg" width="64" height="64" alt="Favicon at 64 pixels"><figcaption>64</figcaption></figure>
+      <figure><img src="/assets/apple-touch-icon.png" width="120" height="120" alt="App icon" style="border-radius:26px"><figcaption>180 · app icon</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Color</h2>
+    <div class="grid g4">
+      <button class="sw" data-hex="#1F55F0" aria-label="Copy Flagship Blue #1F55F0"><div class="chip" style="background:#1F55F0"></div><div class="meta"><b>Flagship Blue</b><code>#1F55F0</code><small>Mark, primary actions, links, footer</small></div></button>
+      <button class="sw" data-hex="#4C7BF7" aria-label="Copy Lit Blue #4C7BF7"><div class="chip" style="background:#4C7BF7"></div><div class="meta"><b>Lit Blue</b><code>#4C7BF7</code><small>Lit face of the mark</small></div></button>
+      <button class="sw" data-hex="#1747D6" aria-label="Copy Blue Ink #1747D6"><div class="chip" style="background:#1747D6"></div><div class="meta"><b>Blue Ink</b><code>#1747D6</code><small>Hover and pressed states</small></div></button>
+      <button class="sw" data-hex="#AFC3FF" aria-label="Copy Sky #AFC3FF"><div class="chip" style="background:#AFC3FF"></div><div class="meta"><b>Sky</b><code>#AFC3FF</code><small>Pixel clouds, borders</small></div></button>
+      <button class="sw" data-hex="#0E1116" aria-label="Copy Ink #0E1116"><div class="chip" style="background:#0E1116"></div><div class="meta"><b>Ink</b><code>#0E1116</code><small>Text, mono mark</small></div></button>
+      <button class="sw" data-hex="#FAFAFC" aria-label="Copy Paper #FAFAFC"><div class="chip" style="background:#FAFAFC;border-bottom:1px solid var(--line)"></div><div class="meta"><b>Paper</b><code>#FAFAFC</code><small>Page background</small></div></button>
+      <button class="sw" data-hex="#15803D" aria-label="Copy Signal Green #15803D"><div class="chip" style="background:#15803D"></div><div class="meta"><b>Signal Green</b><code>#15803D</code><small>In range, earnings</small></div></button>
+      <button class="sw" data-hex="#C8102E" aria-label="Copy Signal Red #C8102E"><div class="chip" style="background:#C8102E"></div><div class="meta"><b>Signal Red</b><code>#C8102E</code><small>Out of range</small></div></button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Type</h2>
+    <div class="grid g2">
+      <div class="type"><small>Inter · 600 headings, 400 body</small><div class="big">Aerodrome Liquidity.</div><p>Headings, body copy and buttons. Tight tracking on large sizes.</p></div>
+      <div class="type"><small>JetBrains Mono · numbers and labels</small><div class="mono">$13,364.80 · 22.0%</div><p>Every figure, label and status chip. Tabular numerals.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pixel motifs</h2>
+    <div class="grid g2">
+      <div class="tile"><div class="stage blue" style="background-image:url(/assets/brand/footer-sky.svg);background-repeat:repeat-x;background-position:left bottom;background-size:720px 112px"></div><div class="cap"><span>Clouds on Flagship Blue · footer</span><a class="dl" href="/assets/brand/footer-sky.svg" download>SVG</a></div></div>
+      <div class="tile"><div class="stage grid-bg"><svg class="mark-arrow" width="64" height="64" aria-hidden="true"><use href="#apa"/></svg></div><div class="cap"><span>Square dot grid · charts and panels</span><span class="mono" style="font-size:12px">2 px on 12 px</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="note"><b>Attribution.</b> "Autopilot" is an Aerodrome (Dromos Labs) brand. Harvest appears as "Autopilot, powered by Harvest".</p>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="sf-in">
+    <div class="sf-brand">
+      <a class="sf-logo" href="/" aria-label="Autopilot home"><svg class="mark-arrow inv" width="40" height="40" aria-hidden="true"><use href="#apa"/></svg><b>Autopilot</b></a>
+      <p>Automated liquidity for Aerodrome LPs.</p>
+      <p class="sf-small">Powered by Harvest</p>
+    </div>
+    <nav class="sf-col" aria-label="Product">
+      <h4>Product</h4>
+      <a href="/#position">Your position</a><a href="/#compare">Compare</a><a href="/#how">How it works</a><a href="/#pools">Pools</a>
+    </nav>
+    <nav class="sf-col" aria-label="Resources">
+      <h4>Resources</h4>
+      <a href="/checklist">Requirements checklist</a><a href="/brand">Brand</a>
+    </nav>
+  </div>
+  <div class="sf-bar"><span>© 2026 Harvest Finance</span><span>Figures in the demo are illustrative.</span></div>
+  <div class="sf-sky" aria-hidden="true"></div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  try { const t = localStorage.getItem('ap-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  // Construction grid drawn from the same pixel data as the favicon.
+  const ROWS = [[0,[7,8]],[1,[7,8]],[2,[6,9]],[3,[6,9]],[4,[5,10]],[5,[5,10]],[6,[4,11]],[7,[4,11]],[8,[3,12]],[9,[3,6],[9,12]],[10,[2,5],[10,13]],[11,[2,4],[11,13]],[13,[7,8]],[14,[6,9]],[15,[7,8]]];
+  const on = new Set();
+  for (const [y, ...spans] of ROWS) for (const [a, b] of spans) for (let x = a; x <= b; x++) on.add(x + ',' + y);
+  const pix = document.getElementById('pix');
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+    const i = document.createElement('i');
+    if (on.has(x + ',' + y)) i.className = x <= 7 ? 'l' : 's';
+    pix.append(i);
+  }
+  let tt;
+  document.querySelectorAll('.sw').forEach((b) => b.addEventListener('click', () => {
+    try { navigator.clipboard.writeText(b.dataset.hex); } catch (e) {}
+    const t = document.getElementById('toast'); t.textContent = 'Copied ' + b.dataset.hex; t.classList.add('on');
+    clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 1600);
+  }));
+})();
+</script>
+</body>
+</html>

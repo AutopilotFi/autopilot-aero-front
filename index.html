@@ -162,6 +162,19 @@ h2{font-size:clamp(36px,4.4vw,58px)}
 .drows b{color:var(--ink);font-weight:500;text-align:right}
 .automate{margin-top:18px;width:100%;height:62px;border:none;border-radius:6px;background:var(--blue);color:#fff;font-size:20px;font-weight:600}
 .automate:hover{background:var(--blue-ink)}
+.automate{position:relative;overflow:hidden;transition:background .35s}
+.a-lbl{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:opacity .2s}
+.a-lbl.swap{opacity:0}
+.a-bar{position:absolute;left:0;bottom:0;height:5px;width:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.95) 0 6px,transparent 6px 8px);transition:width .8s steps(12,end)}
+.automate.busy{cursor:progress;background:var(--blue-ink)}
+.automate.done,.automate.done:hover{background:var(--green)}
+.automate.view{background:var(--ink)}
+.automate.view:hover{background:#000}
+.a-spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.a-step{font-family:var(--mono);font-size:13px;font-weight:500;opacity:.75}
+.burst{position:absolute;width:7px;height:7px;pointer-events:none;z-index:6;transition:transform .75s cubic-bezier(.15,.7,.3,1),opacity .75s ease-in}
+.position.flash{animation:flash 1.2s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 45%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
 .fine{text-align:center;font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:14px}
 
 /* Token icons */
@@ -171,7 +184,10 @@ h2{font-size:clamp(36px,4.4vw,58px)}
 .duo .ti+.ti{margin-left:-10px}
 
 /* Position section */
-.pos-grid{display:grid;grid-template-columns:minmax(0,1fr) 526px;gap:22px;align-items:start;margin-top:72px}
+.pos-grid{display:grid;grid-template-columns:minmax(0,1fr) 526px;gap:22px;align-items:stretch;margin-top:72px}
+.pos-grid>.pcard{align-self:start}
+.pos-side{display:flex;flex-direction:column}
+.pos-side .rewards{flex:1 0 auto}
 .pcard{padding:30px 28px 26px}
 .p-head{display:flex;align-items:center;gap:14px}
 .p-head b{font-size:20px;font-weight:600;display:block}
@@ -310,13 +326,6 @@ h2{font-size:clamp(36px,4.4vw,58px)}
 .tok{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 16px 0 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:17px;font-weight:600}
 .tok:hover{border-color:var(--blue-line)}
 .spark{display:block;width:100%;height:360px}
-footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:120px;background:var(--bg)}
-.foot{max-width:1360px;margin:0 auto;padding:44px 24px 56px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.foot b{font-size:17px}
-.foot p{margin:6px 0 0;color:var(--muted)}
-.foot-link{color:var(--ink);text-decoration:underline;text-underline-offset:3px;font-size:15px}
-.foot-link:hover{color:var(--blue-ink)}
-.foot .mono{color:var(--muted);font-size:15px;align-self:center}
 
 /* Mobile nav */
 .burger{display:none}
@@ -443,7 +452,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
   .tok{height:44px;font-size:16px}
   .spark{height:280px}
   footer{margin-top:72px}
-  .foot{padding:32px 16px 40px}
   #sky{opacity:.55}
   .modal{align-items:flex-end;padding:0}
   .sheet{max-width:none;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
@@ -454,15 +462,52 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
   .sec{padding:80px 0 20px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#sky .candle{animation:none}}
+/* Mark: one pixel arrow (the favicon), colors set per context */
+.mark-arrow{display:block;flex-shrink:0;--a-lit:#4C7BF7;--a-shade:#1F55F0}
+.mark-arrow.inv{--a-lit:#FFFFFF;--a-shade:#C9D7FF}
+/* Pixel footer in flagship blue */
+.site-foot{position:relative;z-index:1;margin-top:120px;background:#1F55F0;color:#FFFFFF;overflow:hidden}
+.site-foot::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' shape-rendering='crispEdges'%3E%3Crect x='5' y='5' width='2' height='2' fill='%23fff' fill-opacity='.16'/%3E%3C/svg%3E");pointer-events:none}
+.sf-in{position:relative;max-width:1360px;margin:0 auto;padding:64px 24px 32px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);gap:40px}
+.sf-logo{display:inline-flex;align-items:center;gap:14px;color:#FFFFFF;text-decoration:none}
+.sf-logo b{font-size:26px;font-weight:600;letter-spacing:-.02em}
+.sf-brand p{margin:14px 0 0;font-size:17px;color:rgba(255,255,255,.88)}
+.sf-brand .sf-small{margin-top:6px;font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.7)}
+.sf-col{display:flex;flex-direction:column;gap:10px}
+.sf-col h4{margin:0 0 4px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.sf-col a{color:#FFFFFF;text-decoration:none;font-size:16px;width:fit-content}
+.site-foot :focus-visible{outline-color:#FFFFFF}
+.sf-bar{position:relative;max-width:1360px;margin:0 auto;padding:18px 0 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.75);border-top:1px solid rgba(255,255,255,.2);width:min(1312px,calc(100% - 48px))}
+.sf-sky{position:relative;height:112px;margin-top:28px;background:url(/assets/brand/footer-sky.svg) repeat-x left bottom/720px 112px}
+@media (max-width:760px){
+  .sf-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:48px 16px 24px;gap:28px}
+  .sf-brand{grid-column:1/-1}
+  .sf-bar{width:calc(100% - 32px)}
+  .sf-sky{height:84px;background-size:540px 84px}
+}
+/* Pixel hover: stepped dotted underline (menu) and a pixel pointer (footer) */
+.links a,.back{position:relative}
+.links a::after,.back::after{content:"";position:absolute;left:0;bottom:-6px;height:3px;width:0;background:repeating-linear-gradient(90deg,var(--blue) 0 3px,transparent 3px 5px);transition:width .32s steps(6,end)}
+.links a:hover::after,.links a:focus-visible::after,.back:hover::after,.back:focus-visible::after{width:100%}
+.sf-col a{position:relative;transition:transform .24s steps(3,end)}
+.sf-col a::before{content:"";position:absolute;left:-15px;top:50%;width:3px;height:3px;margin-top:-5px;background:#fff;box-shadow:0 3px 0 #fff,3px 3px 0 #fff,0 6px 0 #fff;opacity:0;transform:translateX(-6px);transition:opacity .2s steps(2,end),transform .24s steps(3,end)}
+.sf-col a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px);transition:width .3s steps(6,end)}
+.sf-col a:hover,.sf-col a:focus-visible{transform:translateX(15px);text-decoration:none}
+.sf-col a:hover::before,.sf-col a:focus-visible::before{opacity:1;transform:none}
+.sf-col a:hover::after,.sf-col a:focus-visible::after{width:100%}
+@media (prefers-reduced-motion:reduce){.links a::after,.back::after,.sf-col a,.sf-col a::before,.sf-col a::after{transition:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="apa" viewBox="0 0 16 16" shape-rendering="crispEdges"><g fill="var(--a-lit,#4C7BF7)"><rect x="7" y="0" width="1" height="1"/><rect x="7" y="1" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/><rect x="7" y="14" width="1" height="1"/><rect x="7" y="15" width="1" height="1"/></g><g fill="var(--a-shade,#1F55F0)"><rect x="8" y="0" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="10" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="13" y="10" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/><rect x="12" y="11" width="1" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="8" y="13" width="1" height="1"/><rect x="8" y="14" width="1" height="1"/><rect x="9" y="14" width="1" height="1"/><rect x="8" y="15" width="1" height="1"/></g></symbol>
+</svg>
 <div id="sky" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="nav-in">
     <a class="logo" href="#top" aria-label="Autopilot home">
-      <svg width="38" height="26" viewBox="0 0 19 13" shape-rendering="crispEdges" aria-hidden="true"><g fill="var(--blue)"><rect x="7" y="0" width="5" height="1"/><rect x="5" y="1" width="9" height="1"/><rect x="2" y="2" width="15" height="1"/><rect x="1" y="3" width="17" height="4"/><rect x="0" y="5" width="19" height="2"/></g><g fill="var(--blue-pale)"><rect x="1" y="8" width="17" height="1"/></g><g fill="var(--blue)" opacity=".55"><rect x="3" y="10" width="2" height="2"/><rect x="9" y="10" width="2" height="2"/><rect x="14" y="10" width="2" height="2"/></g></svg>
+      <svg class="mark-arrow" width="32" height="32" aria-hidden="true"><use href="#apa"/></svg>
       <span><b>Autopilot</b><small>Automated liquidity for Aerodrome</small></span>
     </a>
     <nav class="links" aria-label="Sections">
@@ -519,16 +564,16 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
       <div class="poolbox">
         <button class="pair-btn" id="pairBtn" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="poolLabel pairName">
           <span class="duo" id="pairIcons"></span>
-          <span><b id="pairName">WETH / USDC</b><small id="pairMeta">Slipstream · 0.0594% · Base</small></span>
+          <span><b id="pairName">cbBTC / USDC</b><small id="pairMeta">Slipstream · 0.04% · Base</small></span>
           <span class="pb-change">Change</span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <details class="pooldd">
           <summary>Pool stats<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary>
           <div class="wstats">
-            <div><span>TVL</span><b id="wTvl">$8.66M</b></div>
-            <div><span>Vol 24h</span><b id="wVol">$81.7M</b></div>
-            <div><span>Fee APR</span><b id="wApr">22.0%</b></div>
-            <div><span>AERO APR</span><b id="wAero">15.4%</b></div>
+            <div><span>TVL</span><b id="wTvl">$6.00M</b></div>
+            <div><span>Vol 24h</span><b id="wVol">$13.3M</b></div>
+            <div><span>Fee APR</span><b id="wApr">10.1%</b></div>
+            <div><span>AERO APR</span><b id="wAero">10.8%</b></div>
           </div>
         </details>
         <div class="menu" id="pairMenu" role="listbox" aria-labelledby="poolLabel"></div>
@@ -540,15 +585,15 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
       <div class="position" id="lpPane">
         <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
         <span class="duo" id="posIcons"></span>
-        <span><span class="id" id="posId">#24,781,906</span><br><span class="rng" id="posRange">2,612 – 2,701</span></span>
-        <span class="val"><span id="posVal">$12,480</span><br><span class="oor" id="posStatus">Out of range</span></span>
+        <span><span class="id" id="posId">#24,779,331</span><br><span class="rng" id="posRange">84,200 – 89,900</span></span>
+        <span class="val"><span id="posVal">$8,215</span><br><span class="oor ir" id="posStatus">In range</span></span>
       </div>
       <div class="nowal" id="noWal" hidden>
         <b>No wallet connected</b>
         <span>Connect a wallet to see your Aerodrome LP positions, or deposit tokens instead.</span>
       </div>
       <div class="deposit" id="depPane">
-        <label class="dfield"><span id="depIconA"></span><input id="depA" type="number" min="0" step="any" placeholder="0.0" inputmode="decimal" aria-label="Amount of first token"><span id="depAName">WETH</span></label>
+        <label class="dfield"><span id="depIconA"></span><input id="depA" type="number" min="0" step="any" placeholder="0.0" inputmode="decimal" aria-label="Amount of first token"><span id="depAName">cbBTC</span></label>
         <label class="dfield"><span id="depIconB"></span><input id="depB" type="number" min="0" step="any" placeholder="0.0" inputmode="decimal" aria-label="Amount of second token"><span id="depBName">USDC</span></label>
         <div class="dhint" id="depHint"></div>
       </div>
@@ -566,7 +611,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
           <div>Take it back<b>Any time, both tokens</b></div>
         </div>
       </details>
-      <button class="automate" id="automate">Automate My Position</button>
+      <button class="automate" id="automate" aria-live="polite"><span class="a-lbl" id="aLbl">Automate My Position</span><span class="a-bar" id="aBar" aria-hidden="true"></span></button>
       <div class="fine">Non-custodial · withdraw anytime · rewards stay yours</div>
     </div>
   </section>
@@ -604,7 +649,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
         </div>
       </div>
 
-      <div>
+      <div class="pos-side">
         <div class="card rewards">
           <div class="r-head"><h3>Your rewards</h3><span class="accru paused"><i></i>Fees pay more today</span></div>
           <div class="r-big"><b id="rXaero">10.3490</b> <span>xAERO</span></div>
@@ -703,7 +748,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
         <p class="lede">Blue chips, stables, tokenized stocks and the wider Aero ecosystem. Autopilot works on the pools you already use, on Base and every chain Aerodrome runs on.</p>
         <div class="grp"><span>Blue chips</span><div class="toks" data-toks="WETH,cbBTC,cbETH,wstETH,uSOL,cbLTC,cbADA"></div></div>
         <div class="grp"><span>Stables</span><div class="toks" data-toks="USDC,USDT,EURC"></div></div>
-        <div class="grp"><span>Tokenized stocks</span><div class="toks" data-toks="Tesla · TSLAc,Coinbase · wtCOIN"></div></div>
+        <div class="grp"><span>Tokenized stocks</span><div class="toks" data-toks="NVIDIA · NVDAc,Apple · AAPLc,Meta · METAc,Amazon · AMZNc,Alphabet · GOOGLc,MicroStrategy · MSTRc,SanDisk · SNDKc,SpaceX · SPCXc,Microsoft · MSFTc,Tesla · TSLAc,Micron · MUc,Palantir · PLTRc,Coinbase · wtCOIN"></div></div>
         <div class="grp"><span>Aero ecosystem</span><div class="toks" data-toks="AERO,VIRTUAL,MORPHO,AAVE,LINK,cbHYPE,cbZEC,ZEN,DEGEN,BRETT"></div></div>
       </div>
       <canvas class="spark" id="spark" aria-hidden="true"></canvas>
@@ -711,11 +756,24 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);margin-top:1
   </section>
 </main>
 
-<footer>
-  <div class="foot">
-    <div><b>Harvest</b><p>Automated liquidity for Aerodrome LPs. Figures in the demo are illustrative.</p><p><a class="foot-link" href="/checklist">Requirements checklist</a></p></div>
-    <span class="mono">© 2026 Harvest Finance</span>
+<footer class="site-foot">
+  <div class="sf-in">
+    <div class="sf-brand">
+      <a class="sf-logo" href="/" aria-label="Autopilot home"><svg class="mark-arrow inv" width="40" height="40" aria-hidden="true"><use href="#apa"/></svg><b>Autopilot</b></a>
+      <p>Automated liquidity for Aerodrome LPs.</p>
+      <p class="sf-small">Powered by Harvest</p>
+    </div>
+    <nav class="sf-col" aria-label="Product">
+      <h4>Product</h4>
+      <a href="/#position">Your position</a><a href="/#compare">Compare</a><a href="/#how">How it works</a><a href="/#pools">Pools</a>
+    </nav>
+    <nav class="sf-col" aria-label="Resources">
+      <h4>Resources</h4>
+      <a href="/checklist">Requirements checklist</a><a href="/brand">Brand</a>
+    </nav>
   </div>
+  <div class="sf-bar"><span>© 2026 Harvest Finance</span><span>Figures in the demo are illustrative.</span></div>
+  <div class="sf-sky" aria-hidden="true"></div>
 </footer>
 <div class="modal" id="connect" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cTitle">
@@ -771,7 +829,7 @@ document.addEventListener('click', (e) => {
 });
 
 /* ---------- token icons (sourced from Aerodrome's token asset CDN, stored locally) ---------- */
-const ICONS = new Set(['WETH', 'USDC', 'cbBTC', 'cbETH', 'wstETH', 'uSOL', 'cbLTC', 'cbADA', 'USDT', 'EURC', 'TSLAc', 'wtCOIN', 'AERO', 'VIRTUAL', 'MORPHO', 'AAVE', 'LINK', 'cbHYPE', 'cbZEC', 'ZEN', 'DEGEN', 'BRETT']);
+const ICONS = new Set(['WETH', 'USDC', 'cbBTC', 'cbETH', 'wstETH', 'uSOL', 'cbLTC', 'cbADA', 'USDT', 'EURC', 'TSLAc', 'wtCOIN', 'AERO', 'VIRTUAL', 'MORPHO', 'AAVE', 'LINK', 'cbHYPE', 'cbZEC', 'ZEN', 'DEGEN', 'BRETT', 'NVDAc', 'AAPLc', 'METAc', 'AMZNc', 'GOOGLc', 'MSTRc', 'SNDKc', 'SPCXc', 'MSFTc', 'MUc', 'PLTRc']);
 const iconKey = (label) => label.split('·').pop().trim();
 function iconEl(label, small) {
   const key = iconKey(label);
@@ -807,7 +865,7 @@ const POOLS = [
   { a: 'cbBTC', b: 'USDC', fee: '0.04%', tvl: '$6.00M', vol: '$13.3M', feeApr: 10.1, aeroApr: 10.8, id: '#24,779,331', range: '84,200 – 89,900', val: 8215, out: false, vault: [85100, 87700] },
   { a: 'WETH', b: 'cbBTC', fee: '0.25%', tvl: '$17.07M', vol: '$3.41M', feeApr: 1.2, aeroApr: 2.5, id: '#24,776,048', range: '0.03305 – 0.03390', val: 4930, out: true, vault: [0.03128, 0.03232] }
 ];
-let pool = POOLS[0], tab = 'lp';
+let pool = POOLS[1], tab = 'lp';
 function renderPool() {
   $('#pairIcons').replaceChildren(iconEl(pool.a), iconEl(pool.b));
   $('#posIcons').replaceChildren(iconEl(pool.a, true), iconEl(pool.b, true));
@@ -840,7 +898,7 @@ POOLS.forEach((p) => {
   const d = document.createElement('span'); d.className = 'duo'; d.append(iconEl(p.a, true), iconEl(p.b, true));
   const s = document.createElement('small'); s.textContent = p.fee;
   b.append(d, document.createTextNode(` ${p.a} / ${p.b}`), s);
-  b.addEventListener('click', () => { pool = p; closeMenu(); $('#depA').value = ''; $('#depB').value = ''; renderPool(); renderDepHint(); });
+  b.addEventListener('click', () => { pool = p; closeMenu(); $('#depA').value = ''; $('#depB').value = ''; renderPool(); renderDepHint(); resetAutomate(); });
   $('#pairMenu').append(b);
 });
 function closeMenu() { $('#pairMenu').classList.remove('open'); $('#pairBtn').setAttribute('aria-expanded', 'false'); }
@@ -896,7 +954,7 @@ function renderWallet() {
   $('#walName').textContent = wallet.name + ' · Base';
   $('#noWal').hidden = on || tab !== 'lp';
   $('#lpPane').style.display = on && tab === 'lp' ? '' : 'none';
-  $('#automate').textContent = on ? 'Automate My Position' : 'Connect wallet';
+  resetAutomate(on);
   renderUplift();
   if (!on && tab === 'lp') { $('#uplift').textContent = '—'; $('#upliftNote').textContent = 'Connect a wallet to see an estimate for your position.'; }
 }
@@ -933,9 +991,75 @@ document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   if (!modal.hidden) closeConnect(); else if (!walMenu.hidden) { setWalMenu(false); walBtn.focus(); } else if (!mnav.hidden) setNav(false);
 });
-$('#automate').addEventListener('click', () => {
-  if (!wallet.connected) openConnect();
-  else toast('Demo: this opens the one-click Autopilot flow.');
+/* ---------- Automate: staged demo flow (nothing is signed) ---------- */
+const aBtn = $('#automate'), aLbl = $('#aLbl'), aBar = $('#aBar');
+let aState = 'idle', aRun = 0;
+const CHECK_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+const vaultRange = (p) => p.vault.map((n) => n.toLocaleString('en-US', { maximumSignificantDigits: 5 })).join(' – ');
+function setLabel(html) {
+  aLbl.classList.add('swap');
+  setTimeout(() => { aLbl.innerHTML = html; aLbl.classList.remove('swap'); }, reduce ? 0 : 160);
+}
+function resetAutomate(connected = wallet.connected) {
+  aRun++; aState = 'idle';
+  aBtn.classList.remove('busy', 'done', 'view'); aBtn.removeAttribute('aria-busy');
+  aBar.style.transition = 'none'; aBar.style.width = '0'; void aBar.offsetWidth; aBar.style.transition = '';
+  aLbl.textContent = connected ? 'Automate My Position' : 'Connect wallet';
+}
+function pixelBurst() {
+  if (reduce) return;
+  const w = aBtn.closest('.widget'), wr = w.getBoundingClientRect(), br = aBtn.getBoundingClientRect();
+  const cx = br.left - wr.left + br.width / 2, cy = br.top - wr.top + br.height / 2;
+  const cols = ['#1F55F0', '#AFC3FF', '#15803D', '#FFFFFF', '#1F55F0'];
+  for (let i = 0; i < 26; i++) {
+    const d = document.createElement('span'); d.className = 'burst';
+    d.style.left = cx + 'px'; d.style.top = cy + 'px'; d.style.background = cols[i % cols.length];
+    if (cols[i % cols.length] === '#FFFFFF') d.style.outline = '1px solid #AFC3FF';
+    w.append(d);
+    const a = (i / 26) * Math.PI * 2 + rand(-0.2, 0.2), r = rand(70, 190);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      d.style.transform = `translate(${Math.cos(a) * r}px, ${Math.sin(a) * r * 0.6 - 30}px) rotate(${ri(0, 3) * 90}deg)`;
+      d.style.opacity = '0';
+    }));
+    setTimeout(() => d.remove(), 900);
+  }
+}
+async function automate() {
+  const run = ++aRun, wait = (ms) => new Promise((r) => setTimeout(r, reduce ? ms / 3 : ms));
+  const alive = () => run === aRun;
+  const lp = tab === 'lp';
+  if (!lp && !(parseFloat($('#depA').value) > 0)) { toast('Enter an amount to deposit first.'); $('#depA').focus(); return; }
+  const steps = lp
+    ? [['Confirm in your wallet', 1100], [`Withdrawing ${pool.id}`, 900], [`Setting range ${vaultRange(pool)}`, 900], ['Starting auto-rebalancing', 800]]
+    : [['Confirm in your wallet', 1100], [`Depositing ${pool.a} + ${pool.b}`, 900], [`Setting range ${vaultRange(pool)}`, 900], ['Starting auto-rebalancing', 800]];
+  aState = 'busy'; aBtn.classList.add('busy'); aBtn.setAttribute('aria-busy', 'true');
+  for (let i = 0; i < steps.length; i++) {
+    const [text, ms] = steps[i];
+    setLabel(`<span class="a-spin"></span>${text}<span class="a-step">${i + 1}/${steps.length}</span>`);
+    aBar.style.width = ((i + 1) / steps.length * 100) + '%';
+    await wait(ms);
+    if (!alive()) return;
+  }
+  aState = 'done'; aBtn.classList.remove('busy'); aBtn.classList.add('done'); aBtn.removeAttribute('aria-busy');
+  setLabel(CHECK_SVG + 'Position on Autopilot');
+  pixelBurst();
+  if (lp) {
+    const st = $('#posStatus'); st.textContent = 'On Autopilot · in range'; st.classList.add('ir');
+    $('#posRange').textContent = vaultRange(pool);
+    const row = $('#lpPane'); row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+  }
+  toast('Demo: your position is on Autopilot. Nothing was signed.');
+  await wait(2200);
+  if (!alive()) return;
+  aState = 'view'; aBtn.classList.remove('done'); aBtn.classList.add('view');
+  aBar.style.transition = 'none'; aBar.style.width = '0';
+  setLabel('View your position <span aria-hidden="true">→</span>');
+}
+aBtn.addEventListener('click', () => {
+  if (!wallet.connected) return openConnect();
+  if (aState === 'busy' || aState === 'done') return;
+  if (aState === 'view') return document.getElementById('position').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  automate();
 });
 
 /* ---------- canvas helpers ---------- */
