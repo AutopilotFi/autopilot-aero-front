@@ -1,6 +1,0 @@
-# Confidential RFP + reference screenshots: never deploy
-ref/
-# Local dev only
-serve.cjs
-.env*
-.vercel/
