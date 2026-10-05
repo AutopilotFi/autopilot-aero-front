@@ -1,9 +1,14 @@
 {
   "name": "autopilot-aero-front",
   "private": true,
-  "engines": { "node": "22.x" },
-  "scripts": {
-    "start": "serve . --listen tcp://0.0.0.0:${PORT:-3000} --no-clipboard"
+  "engines": {
+    "node": "22.x"
   },
-  "dependencies": { "serve": "^14.2.4" }
+  "scripts": {
+    "build": "rm -rf dist && mkdir dist && cp -R index.html assets brand checklist dist/",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "5.2.1"
+  }
 }
