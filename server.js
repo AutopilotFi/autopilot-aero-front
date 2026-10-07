@@ -51,7 +51,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(ROOT, { extensions: ['html'], dotfiles: 'ignore', maxAge: '1h' }));
+app.use(express.static(ROOT, {
+  extensions: ['html'], dotfiles: 'ignore', maxAge: '1h',
+  // Pages and the password gate revalidate on every visit, so updates (and the gate) show up immediately.
+  setHeaders: (res, file) => { if (/\.html$|gate\.js$/.test(file)) res.set('Cache-Control', 'no-cache'); },
+}));
 app.use((req, res) => res.status(404).type('text').send('Not found'));
 
 const port = process.env.PORT || 3000;
