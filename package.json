@@ -5,7 +5,7 @@
     "node": "22.x"
   },
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp -R index.html assets brand checklist dist/",
+    "build": "rm -rf dist && mkdir dist && cp -R index.html robots.txt assets brand checklist dist/",
     "start": "node server.js"
   },
   "dependencies": {

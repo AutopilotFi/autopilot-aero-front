@@ -18,7 +18,7 @@ const scriptHashes = htmlFiles.flatMap((f) => {
 
 const CSP = [
   "default-src 'self'",
-  `script-src ${scriptHashes.join(' ')}`,
+  `script-src 'self' ${scriptHashes.join(' ')}`, // 'self' for assets/gate.js
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data:",
@@ -46,11 +46,16 @@ app.use((req, res, next) => {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
     'Cross-Origin-Opener-Policy': 'same-origin',
+    'X-Robots-Tag': 'noindex, nofollow', // preview only: keep it out of search engines
   });
   next();
 });
 
-app.use(express.static(ROOT, { extensions: ['html'], dotfiles: 'ignore', maxAge: '1h' }));
+app.use(express.static(ROOT, {
+  extensions: ['html'], dotfiles: 'ignore', maxAge: '1h',
+  // Pages and the password gate revalidate on every visit, so updates (and the gate) show up immediately.
+  setHeaders: (res, file) => { if (/\.html$|gate\.js$/.test(file)) res.set('Cache-Control', 'no-cache'); },
+}));
 app.use((req, res) => res.status(404).type('text').send('Not found'));
 
 const port = process.env.PORT || 3000;
