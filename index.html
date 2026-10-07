@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Autopilot · Your Aerodrome LP, on auto-rebalancing</title>
-<meta name="description" content="Put your Aerodrome LP position on Autopilot in one click. Auto-rebalancing works to keep it in range, swap fees compound into your position, and AERO rewards stay yours to claim. Non-custodial, withdraw anytime.">
+<meta name="description" content="Put your Aerodrome LP position on Autopilot in one click. Auto-rebalancing works to keep it in range while it earns AERO emissions or swap fees, depending on the pool. Rewards stay yours to claim. Non-custodial, withdraw anytime.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1F55F0">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -12,9 +12,9 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <!-- Social previews: absolute URLs; update when moving to autopilot.finance. -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Autopilot by Harvest">
+<meta property="og:site_name" content="Autopilot, powered by Harvest">
 <meta property="og:title" content="Aerodrome Liquidity. On Autopilot.">
-<meta property="og:description" content="One click to put your Aerodrome LP on auto-rebalancing. Fees compound, AERO rewards stay yours. Non-custodial, withdraw anytime.">
+<meta property="og:description" content="One click to put your Aerodrome LP on auto-rebalancing. It earns AERO or swap fees, depending on the pool. Non-custodial, withdraw anytime.">
 <meta property="og:url" content="https://autopilot-aero-landing.vercel.app/">
 <meta property="og:image" content="https://autopilot-aero-landing.vercel.app/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="Autopilot: Aerodrome Liquidity. On Autopilot. A pixel chart of a WETH/USDC position staying in range.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Aerodrome Liquidity. On Autopilot.">
-<meta name="twitter:description" content="One click to put your Aerodrome LP on auto-rebalancing. Fees compound, AERO rewards stay yours.">
+<meta name="twitter:description" content="One click to put your Aerodrome LP on auto-rebalancing. It earns AERO or swap fees, depending on the pool.">
 <meta name="twitter:image" content="https://autopilot-aero-landing.vercel.app/assets/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -232,7 +232,7 @@ h2{font-size:clamp(36px,4.4vw,58px)}
 .chart{position:relative;margin-top:18px;height:300px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);overflow:hidden}
 .chart canvas{position:absolute;inset:0;width:100%;height:100%}
 .badge{position:absolute;top:12px;right:14px;display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--muted)}
-.badge i{width:8px;height:8px;background:var(--range)}
+.badge i{width:8px;height:8px;background:var(--green)}
 .tip{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);padding:2px 10px;border:1px solid var(--blue-line);background:color-mix(in srgb,var(--surface) 94%,transparent);font-family:var(--mono);font-size:13px;color:var(--blue-ink);white-space:nowrap;z-index:1}
 .legend{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:8px}
@@ -304,9 +304,9 @@ h2{font-size:clamp(36px,4.4vw,58px)}
 .ccard h3{margin:22px 0 0;font-size:22px;font-weight:600;letter-spacing:-.01em}
 .ccard p{margin:6px 0 0;color:var(--muted)}
 .crows{margin-top:24px;border-top:1px solid var(--line)}
-.crows div{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+.crows div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
 .crows div:last-child{border-bottom:none}
-.crows span{color:var(--muted)}
+.crows span{color:var(--muted);white-space:nowrap}
 .crows b{font-weight:500;text-align:right}
 .pro .crows b{color:var(--blue)}
 
@@ -411,12 +411,14 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   .wstats>div:nth-child(n+3){border-top:1px solid var(--line)}
   .wmenu{top:42px}
   .pair-btn b,.pair-btn small{white-space:nowrap}
+  .pair-btn>span:nth-child(2){min-width:0}.pair-btn>span:nth-child(2)>*{overflow:hidden;text-overflow:ellipsis}
   .menu{top:64px;min-width:0}
   .position{gap:10px;padding:12px}
   .position>.check{display:none}
   .position .id{font-size:15px}
   .position .rng,.oor{white-space:nowrap}
   .uplift b{font-size:26px}
+  .uplift{position:relative}.uplift .info{position:static}.uplift .tipbox{left:12px;right:12px;width:auto}
   .details summary{flex-wrap:wrap;row-gap:4px}
   .details summary span{order:3;width:100%;margin-left:0}
   .details summary .chev{margin-left:auto}
@@ -429,6 +431,7 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   .pv-label{margin-top:20px}
   .pstats>div:nth-child(2) .tipbox,.pstats>div:nth-child(4) .tipbox{left:auto;right:-8px;transform:none}
   .pstats>div:nth-child(3) .tipbox{left:-8px;transform:none}
+  .pstats>div{position:relative}.pstats .info{position:static}
   .earn{padding:16px 0 0;border-left:none;border-top:1px solid var(--line)}
   .earn-big{font-size:28px}
   .comp-leg{font-size:13px}
@@ -447,11 +450,13 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   .shock{width:100%;justify-content:center}
   .cmp{margin-top:36px}
   .ccard{padding:20px 18px}
-  .crows div{font-size:15px}
+  .crows div{font-size:13px}
   .step{padding:20px 18px}
   .grp{margin-top:28px}
-  .tok{height:44px;font-size:16px}
-  .spark{height:280px}
+  .toks{gap:5px}
+  .tok{height:24px;gap:5px;padding:0 8px 0 5px;font-size:11px;border-radius:4px}
+  .tok .ti.sm{width:14px;height:14px;font-size:7px;box-shadow:none}
+  .spark{height:140px}
   footer{margin-top:72px}
   #sky{opacity:.55}
   .modal{align-items:flex-end;padding:0}
@@ -485,6 +490,8 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   .sf-brand{grid-column:1/-1}
   .sf-bar{width:calc(100% - 32px)}
   .sf-sky{height:84px;background-size:540px 84px}
+  .site-foot{margin-top:48px}
+  .pools{gap:24px}
 }
 /* Pixel hover: stepped dotted underline (menu) and a pixel pointer (footer) */
 .links a,.back{position:relative}
@@ -541,9 +548,9 @@ h2{font-size:clamp(36px,4.4vw,58px)}
     <div>
       <a class="pill" href="#how"><i></i>For Aerodrome LPs · one click <span aria-hidden="true">→</span></a>
       <h1>Aerodrome Liquidity.<br>On <em>Autopilot.</em></h1>
-      <p class="lede">Make your Aerodrome LP more efficient with automation. One click to get started and earn more on your assets with automated rebalancing.</p>
+      <p class="lede">Make your Aerodrome LP more efficient with automation. One click to get started, and automated rebalancing keeps your position in range.</p>
       <div class="ctas">
-        <a class="btn btn-blue" href="#position">Watch it grow <span aria-hidden="true">→</span></a>
+        <a class="btn btn-blue" href="#position">Watch it work <span aria-hidden="true">→</span></a>
         <a class="btn btn-soft" href="#" data-toast="The app is opening soon.">Open App <span class="soon">SOON</span></a>
       </div>
     </div>
@@ -599,15 +606,15 @@ h2{font-size:clamp(36px,4.4vw,58px)}
         <div class="dhint" id="depHint"></div>
       </div>
       <div class="uplift">
-        <div class="uplift-top">Estimated earnings <button class="info" type="button" aria-describedby="upliftNote" aria-label="How this is estimated">i<span class="tipbox" role="tooltip" id="upliftNote">Today's fee APR is 22.0%, capped at 20%, at 90% time in range. Estimate only.</span></button></div>
-        <b id="uplift">+$187/mo</b>
+        <div class="uplift-top">Estimated earnings <button class="info" type="button" aria-describedby="upliftNote" aria-label="How this is estimated">i<span class="tipbox" role="tooltip" id="upliftNote">Blue-chip pool, so the vault stays staked and earns AERO. Today's AERO APR is 10.8%, at 90% time in range. Estimate only.</span></button></div>
+        <b id="uplift">+$67/mo</b>
       </div>
       <details class="details">
         <summary>Details <span>You receive <b id="receive">11,653.7 av-WETH/USDC</b></span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="drows">
           <div>Range<b>Auto-rebalancing</b></div>
-          <div>Swap fees<b>Compounded into your position</b></div>
-          <div>AERO rewards<b>Paid as xAERO, yours to claim</b></div>
+          <div>Earns<b id="dEarn">AERO emissions, staked</b></div>
+          <div>Rewards<b id="dRew">Paid as xAERO, yours to claim</b></div>
           
           <div>Take it back<b>Any time, both tokens</b></div>
         </div>
@@ -620,44 +627,44 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   <!-- Your position -->
   <section class="sec" id="position">
     <div class="eyebrow">After you deposit</div>
-    <h2 style="margin-top:14px;max-width:1040px">Watch Your Aero LP Position Grow, on Autopilot</h2>
-    <p class="lede">Your position, live. Autopilot auto-rebalances it to stay in range. Swap fees are compounded into your position; AERO rewards are paid as xAERO and kept separate for you to claim. Every number is public onchain.</p>
+    <h2 style="margin-top:14px;max-width:1040px">Your Aero LP Position, on Autopilot</h2>
+    <p class="lede">Your position, live. Autopilot auto-rebalances it to stay in range. Depending on the pool, it earns AERO emissions, paid as xAERO for you to claim, or swap fees, compounded back in. Every number is public onchain.</p>
 
     <div class="pos-grid">
       <div class="card pcard">
         <div class="p-head">
           <span class="duo"><span class="ti" data-t="WETH"></span><span class="ti" data-t="USDC"></span></span>
-          <span><b>WETH / USDC</b><small>Autopilot vault · av-WETH/USDC</small></span>
+          <span><b>WETH / USDC</b><small>Autopilot vault · staked</small></span>
           <span class="chip" id="rangeChip">In range</span>
         </div>
-        <div class="pv-label">Position value <button class="info" type="button" aria-describedby="tPv" aria-label="More info">i<span class="tipbox" role="tooltip" id="tPv">Example: $12,480 deposited on Sep 2, when ETH was $2,418. Includes swap fees compounded into the position. xAERO rewards are kept separate.</span></button></div>
+        <div class="pv-label">Position value <button class="info" type="button" aria-describedby="tPv" aria-label="More info">i<span class="tipbox" role="tooltip" id="tPv">Example: $12,480 deposited on Sep 2, when ETH was $2,418. The vault stays staked, so the position earns AERO, not swap fees. xAERO rewards are kept separate from this value. The value moves with WETH and USDC prices, including impermanent loss.</span></button></div>
         <div class="pv">$13,364.80</div>
         <div class="chart">
           <canvas id="posChart"></canvas>
           <span class="badge"><i></i><span id="rangeBadge">Auto-rebalancing on</span></span>
-          <span class="tip" id="tip">In range · earning fees</span>
+          <span class="tip" id="tip">In range · earning AERO</span>
         </div>
         <div class="legend">
-          <span><i style="background:var(--blue)"></i>Price in range · earning</span>
-          <span><i style="background:var(--red)"></i>Out of range · earning paused</span>
+          <span><i style="background:var(--blue)"></i>Price in range</span>
+          <span><i style="background:var(--red)"></i>Price out of range</span>
           <span><i class="dash"></i>Your range</span>
         </div>
         <div class="pstats">
-          <div><span>Earned · 30d <button class="info" type="button" aria-describedby="tEarn" aria-label="More info">i<span class="tipbox" role="tooltip" id="tEarn">xAERO rewards: <span id="tXTotal">227.51 ($180.87)</span>: <span id="tClaimed">217.16</span> claimed, <span id="tReady">10.35</span> ready to claim. Swap fees compounded: $61.15. Left out of range, your old position would have earned $0.</span></button></span><b class="up"><span id="earnTotal">+$242.0183</span></b></div>
-          <div><span>Fees compounded</span><b>$61.15</b></div>
+          <div><span>Earned · 30d <button class="info" type="button" aria-describedby="tEarn" aria-label="More info">i<span class="tipbox" role="tooltip" id="tEarn">xAERO rewards: <span id="tXTotal">208.11 ($165.44)</span>: <span id="tClaimed">197.76</span> claimed, <span id="tReady">10.35</span> ready to claim. Left out of range, your old position would have earned $0.</span></button></span><b class="up"><span id="earnTotal">+$165.4438</span></b></div>
+          <div><span>AERO APR · today</span><b>15.4%</b></div>
           <div><span>Time in range</span><b>97.8%</b></div>
-          <div><span>Auto-rebalances <button class="info" type="button" aria-describedby="tReb" aria-label="More info">i<span class="tipbox" role="tooltip" id="tReb">Earning swap fees right now: they pay more than AERO today (22.0% vs 15.4%). Last 30 days: staked 21 days, earning fees 9 days.</span></button></span><b>14</b></div>
+          <div><span>Auto-rebalances <button class="info" type="button" aria-describedby="tReb" aria-label="More info">i<span class="tipbox" role="tooltip" id="tReb">Range moves in the last 30 days, timed to keep costs low. The position is restaked after each move, so it keeps earning AERO while in range.</span></button></span><b>14</b></div>
         </div>
       </div>
 
       <div class="pos-side">
         <div class="card rewards">
-          <div class="r-head"><h3>Your rewards</h3><span class="accru paused"><i></i>Fees pay more today</span></div>
+          <div class="r-head"><h3>Your rewards</h3><span class="accru" id="accru"><i></i>Staked · earning AERO</span></div>
           <div class="r-big"><b id="rXaero">10.3490</b> <span>xAERO</span></div>
-          <div class="r-sub"><span id="rXaeroUsd">≈ $8.23</span> · ready to claim · <span id="rClaimed">217.16</span> claimed so far</div>
+          <div class="r-sub"><span id="rXaeroUsd">≈ $8.23</span> · ready to claim · <span id="rClaimed">197.76</span> claimed so far</div>
           <ul class="flows">
             <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span><span><b>xAERO rewards</b><small>Yours to keep, held separately from your position.</small></span></li>
-            <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><span><b>Swap fees</b><small>Compounded into your position automatically, whenever it earns them.</small></span></li>
+            <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><span><b>Swap fees, in fee mode</b><small>Pools outside the blue-chip policy can earn swap fees instead of AERO. Those are compounded into the position.</small></span></li>
             <li><span class="fi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span><span><b>Claim whenever you like</b><small>Your position keeps working either way. Rewards wait for you.</small></span></li>
           </ul>
           <button class="claim" id="claimBtn">Claim <span id="claimAmt">10.3490</span> xAERO</button>
@@ -668,8 +675,8 @@ h2{font-size:clamp(36px,4.4vw,58px)}
           <div class="vrows">
             <div>Share price<b id="vShare">$1.07090</b></div>
             <div>Current range<b>2,701 – 2,791 USDC</b></div>
-            <div>Mode<b>Earning fees · 22.0% &gt; AERO 15.4%</b></div>
-            <div>Swap fees<b>Compounded</b></div>
+            <div>Mode<b>Staked · blue-chip policy</b></div>
+            <div>Swap fees<b>To sAERO voters while staked</b></div>
             <div>xAERO rewards<b>Passed through, claimable</b></div>
             <div>Your claimable xAERO<b id="vX">10.3490 xAERO</b></div>
           </div>
@@ -683,28 +690,28 @@ h2{font-size:clamp(36px,4.4vw,58px)}
     <div class="sec-head">
       <div>
         <div class="eyebrow">Why Autopilot</div>
-        <h2>Between doing it yourself and trusting<br>a black box.</h2>
-        <p class="lede">Same market, three ways to LP it. Hit the button and watch who stays in range.</p>
+        <h2>The control of doing it yourself,<br>without the upkeep.</h2>
+        <p class="lede">Same market, three ways to LP it, running live. Add a price shock to see how each one adjusts.</p>
       </div>
-      <button class="shock" id="shock"><i aria-hidden="true"></i>Simulate a price shock</button>
+      <button class="shock" id="shock"><i aria-hidden="true"></i>Add a price shock</button>
     </div>
     <div class="cmp">
       <article class="card ccard">
         <canvas class="ccv" data-strat="manual"></canvas>
-        <div class="cstat" id="st-manual">In range <span class="r">–</span> · costly rebalances <span class="r">–</span></div>
-        <h3>Manual LP</h3><p>Full control, full-time job.</p>
+        <div class="cstat" id="st-manual">In range <span class="k">–</span> · rebalances <span class="k">–</span></div>
+        <h3>Manual LP</h3><p>Full control, hands-on upkeep.</p>
         <div class="crows">
-          <div><span>Range</span><b>You pick, you fix</b></div>
+          <div><span>Range</span><b>You set and adjust it</b></div>
           <div><span>Rewards</span><b>Yours to claim</b></div>
-          <div><span>Rebalance cost</span><b>You pay full price</b></div>
+          <div><span>Rebalance cost</span><b>Paid per adjustment</b></div>
           <div><span>Exit</span><b>Any time</b></div>
         </div>
       </article>
       <article class="card ccard pro">
         <span class="tag">AUTOPILOT</span>
         <canvas class="ccv" data-strat="auto"></canvas>
-        <div class="cstat" id="st-auto">In range <span class="b">–</span> · value lost <span class="b">–</span></div>
-        <h3>Autopilot by Harvest</h3><p>Hands-off, and you can still check everything.</p>
+        <div class="cstat" id="st-auto">In range <span class="b">–</span> · rebalances <span class="b">–</span></div>
+        <h3>Autopilot, powered&nbsp;by&nbsp;Harvest</h3><p>Hands-off, and you can still check everything.</p>
         <div class="crows">
           <div><span>Range</span><b>Auto-rebalancing, targets ≥90% in range</b></div>
           <div><span>Rewards</span><b>Yours to claim</b></div>
@@ -714,13 +721,13 @@ h2{font-size:clamp(36px,4.4vw,58px)}
       </article>
       <article class="card ccard">
         <canvas class="ccv" data-strat="alm"></canvas>
-        <div class="cstat" id="st-alm">In range <span class="k">–</span> · costly rebalances <span class="r">–</span></div>
-        <h3>Typical automated vault</h3><p>Hands-off, until you ask a question.</p>
+        <div class="cstat" id="st-alm">In range <span class="k">–</span> · rebalances <span class="k">–</span></div>
+        <h3>Managed vault</h3><p>Hands-off, with less visibility.</p>
         <div class="crows">
           <div><span>Range</span><b>Automated</b></div>
-          <div><span>Rewards</span><b>Often sold for you</b></div>
-          <div><span>Rebalance cost</span><b>Value lost on swaps</b></div>
-          <div><span>Exit</span><b>Depends on the operator</b></div>
+          <div><span>Rewards</span><b>Set by the vault</b></div>
+          <div><span>Rebalance cost</span><b>Built into the strategy</b></div>
+          <div><span>Exit</span><b>Per vault terms</b></div>
         </div>
       </article>
     </div>
@@ -730,12 +737,12 @@ h2{font-size:clamp(36px,4.4vw,58px)}
   <section class="sec" id="how">
     <div class="eyebrow">How it works</div>
     <h2 style="margin-top:14px">One click. Then it runs itself.</h2>
-    <p class="lede">Auto-rebalancing takes care of your range, and swap fees go back into your position.</p>
+    <p class="lede">Auto-rebalancing takes care of your range while your position earns AERO emissions or swap fees, depending on the pool.</p>
     <canvas class="how-line" id="howLine" aria-hidden="true"></canvas>
     <div class="steps">
       <article class="card step"><span class="n">01</span><h3>Pick your pool</h3><p>Choose the Aerodrome pool you already LP in, or start fresh in a new one.</p></article>
       <article class="card step"><span class="n">02</span><h3>Press Automate</h3><p>Bring your existing position or just deposit tokens. One click, one signature.</p></article>
-      <article class="card step"><span class="n">03</span><h3>Sit back</h3><p>Auto-rebalancing works to keep your position in range. Swap fees are compounded back into it automatically.</p></article>
+      <article class="card step"><span class="n">03</span><h3>Sit back</h3><p>Auto-rebalancing works to keep your position in range, where it earns. Blue-chip pools stay staked for AERO; in fee mode, swap fees are compounded back in.</p></article>
       <article class="card step"><span class="n">04</span><h3>Claim, or don't</h3><p>AERO rewards build up separately as xAERO. Claim them any time, withdraw any time.</p></article>
     </div>
   </section>
@@ -746,8 +753,8 @@ h2{font-size:clamp(36px,4.4vw,58px)}
       <div>
         <div class="eyebrow">Markets</div>
         <h2 style="margin-top:14px">Supporting Aerodrome pools.</h2>
-        <p class="lede">Blue chips, stables, tokenized stocks and the wider Aero ecosystem. Autopilot works on the pools you already use, on Base and every chain Aerodrome runs on.</p>
-        <div class="grp"><span>Blue chips</span><div class="toks" data-toks="WETH,cbBTC,cbETH,wstETH,uSOL,cbLTC,cbADA"></div></div>
+        <p class="lede">Majors, stables, tokenized stocks and the wider Aero ecosystem. Autopilot works on the pools you already use, on Base and every chain Aerodrome runs on.</p>
+        <div class="grp"><span>Majors</span><div class="toks" data-toks="WETH,cbBTC,cbETH,wstETH,uSOL,cbLTC,cbADA"></div></div>
         <div class="grp"><span>Stables</span><div class="toks" data-toks="USDC,USDT,EURC"></div></div>
         <div class="grp"><span>Tokenized stocks</span><div class="toks" data-toks="NVIDIA · NVDAc,Apple · AAPLc,Meta · METAc,Amazon · AMZNc,Alphabet · GOOGLc,MicroStrategy · MSTRc,SanDisk · SNDKc,SpaceX · SPCXc,Microsoft · MSFTc,Tesla · TSLAc,Micron · MUc,Palantir · PLTRc,Coinbase · wtCOIN"></div></div>
         <div class="grp"><span>Aero ecosystem</span><div class="toks" data-toks="AERO,VIRTUAL,MORPHO,AAVE,LINK,cbHYPE,cbZEC,ZEN,DEGEN,BRETT"></div></div>
@@ -773,7 +780,7 @@ h2{font-size:clamp(36px,4.4vw,58px)}
       <a href="/checklist">Requirements checklist</a><a href="/brand">Brand</a>
     </nav>
   </div>
-  <div class="sf-bar"><span>© 2026 Harvest Finance</span><span>Figures in the demo are illustrative.</span></div>
+  <div class="sf-bar"><span>© 2026 Harvest Finance</span><span>Figures in the demo are illustrative. LP positions carry price risk, including impermanent loss.</span></div>
   <div class="sf-sky" aria-hidden="true"></div>
 </footer>
 <div class="modal" id="connect" hidden>
@@ -859,6 +866,11 @@ addEventListener('resize', () => { if (innerWidth > 1180) setNav(false); });
 /* ---------- hero widget ---------- */
 // Largest Slipstream pool per pair on Base, 2026-10-02 (DefiLlama yields; prices from CoinGecko).
 // Position IDs sit near the live Slipstream position-NFT supply (~24.78M); positions themselves are examples.
+// Staking policy (RFP Q&A 2.7 / 4.2): blue-chip pools stay staked and earn AERO. Blue chips are the deep majors,
+// WETH/USDC, cbBTC/USDC, WETH/cbBTC, plus stable pairs. Longer-tail pools take whichever pays more today.
+// A position earns one or the other, never both: staked liquidity earns emissions and its swap fees go to sAERO voters.
+const BLUE_PAIRS = new Set(['WETH/USDC', 'cbBTC/USDC', 'WETH/cbBTC']), STABLES = new Set(['USDC', 'USDT', 'EURC']);
+const isBlue = (p) => BLUE_PAIRS.has(p.a + '/' + p.b) || (STABLES.has(p.a) && STABLES.has(p.b));
 const PX = { WETH: 2747.33, cbBTC: 86392, USDC: 1, AERO: 0.794986 };
 const SHARE_PRICE = 1.0709; // USD per share of the example vault (launched Sep 2 at $1.00)
 const POOLS = [
@@ -885,13 +897,16 @@ function renderPool() {
 function renderUplift() {
   let value = pool.val;
   if (tab === 'dep') value = (parseFloat($('#depA').value) || 0) * PX[pool.a] + (parseFloat($('#depB').value) || 0) * PX[pool.b];
-  // A position earns swap fees (unstaked) or AERO (staked), not both: take today's better of the two,
-  // cap it at 20% to discount spikes, and assume 90% time in range.
-  const aeroWins = pool.aeroApr >= pool.feeApr, best = Math.max(pool.feeApr, pool.aeroApr);
+  // Blue chips stay staked, so only the AERO APR counts. Other pools take today's better of fees (unstaked)
+  // or AERO (staked). Cap it at 20% to discount spikes, and assume 90% time in range.
+  const staked = isBlue(pool), aeroWins = staked || pool.aeroApr >= pool.feeApr;
+  const best = aeroWins ? pool.aeroApr : pool.feeApr;
   const apr = Math.min(best, 20) / 100 * 0.9;
   $('#uplift').textContent = '+' + usd(value * apr / 12, 0) + '/mo';
   const basis = `Today's ${aeroWins ? 'AERO' : 'fee'} APR is ${best.toFixed(1)}%${best > 20 ? ', capped at 20%' : ''}, at 90% time in range.`;
-  $('#upliftNote').textContent = basis + ' Estimate only.';
+  $('#upliftNote').textContent = (staked ? 'Blue-chip pool, so the vault stays staked and earns AERO. ' : 'The vault earns whichever pays more today. ') + basis + ' Estimate only.';
+  $('#dEarn').textContent = staked ? 'AERO emissions, staked' : 'Swap fees or AERO, whichever pays more';
+  $('#dRew').textContent = staked ? 'Paid as xAERO, yours to claim' : 'xAERO to claim, or fees compounded in';
   $('#receive').textContent = `${(value / SHARE_PRICE).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} av-${pool.a}/${pool.b}`;
 }
 POOLS.forEach((p) => {
@@ -1033,6 +1048,7 @@ async function automate() {
   const steps = lp
     ? [['Confirm in your wallet', 1100], [`Withdrawing ${pool.id}`, 900], [`Setting range ${vaultRange(pool)}`, 900], ['Starting auto-rebalancing', 800]]
     : [['Confirm in your wallet', 1100], [`Depositing ${pool.a} + ${pool.b}`, 900], [`Setting range ${vaultRange(pool)}`, 900], ['Starting auto-rebalancing', 800]];
+  if (isBlue(pool)) steps.splice(3, 0, ['Staking in the gauge', 800]);
   aState = 'busy'; aBtn.classList.add('busy'); aBtn.setAttribute('aria-busy', 'true');
   for (let i = 0; i < steps.length; i++) {
     const [text, ms] = steps[i];
@@ -1187,12 +1203,12 @@ function drawSky(dt) {
 /* ---------- position chart: smooth-scrolling live simulation ---------- */
 const STEP = 0.5;
 const pos = { cols: 0, rows: 0, p: [], ir: [], lo: [], hi: [], curLo: 0, curHi: 0, total: 0, acc: 0,
-  value: 13364.8, shown: 13364.8, fees: 61.15, xaero: 10.349, reb: 14, steps: 0, inSteps: 0, sinceX: 0, ui: 0 };
-// Example vault: $12,480 deposited Sep 2. Over the last 30 days it took the better of fee APR and AERO APR
-// each day (DefiLlama daily history): 21 days staked, 9 on fees. Today fees pay more
-// (22.0% vs 15.4%), so swap fees accrue live and xAERO is paused.
-const FEE_PER_SEC = 13364.8 * 0.2199 * 0.978 / 31536000;
-let xClaimed = 217.16;
+  value: 13364.8, shown: 13364.8, xaero: 10.349, reb: 14, steps: 0, inSteps: 0, sinceX: 0, ui: 0 };
+// Example vault: $12,480 deposited Sep 2 into WETH/USDC, a blue-chip pool, so it stays staked and earns
+// AERO only (15.4% APR, 97.8% time in range over 30 days). Emissions only reach in-range staked liquidity,
+// so xAERO accrues live while the price is in range and pauses when it is out.
+const X_PER_SEC = 13364.8 * 0.154 / 31536000 / PX.AERO;
+let xClaimed = 197.76;
 function posPush(v) {
   const ir = v >= pos.curLo && v <= pos.curHi;
   pos.p.push(v); pos.ir.push(ir); pos.lo.push(pos.curLo); pos.hi.push(pos.curHi);
@@ -1231,7 +1247,7 @@ const posView = register($('#posChart'), (dt) => {
   pos.acc += dt;
   while (pos.acc >= STEP) { pos.acc -= STEP; posStep(); }
   const frac = pos.acc / STEP, ir = pos.ir[pos.ir.length - 1];
-  if (ir) pos.fees += FEE_PER_SEC * dt;
+  if (ir) pos.xaero += X_PER_SEC * dt;
   pos.shown += (pos.value - pos.shown) * Math.min(1, dt * 5);
 
   const ctx = begin(v);
@@ -1250,7 +1266,7 @@ const posView = register($('#posChart'), (dt) => {
   }
   // Text readouts at ~12 fps; the big number counts smoothly every frame.
   // The one live number in the card: total earned, streaming with xAERO.
-  $('#earnTotal').textContent = '+' + usd((xClaimed + pos.xaero) * PX.AERO + pos.fees, 4);
+  $('#earnTotal').textContent = '+' + usd((xClaimed + pos.xaero) * PX.AERO, 4);
   pos.ui += dt; if (pos.ui < 0.08) return; pos.ui = 0;
 
   const x = pos.xaero.toFixed(4);
@@ -1261,77 +1277,93 @@ const posView = register($('#posChart'), (dt) => {
   $('#tXTotal').textContent = `${xAll.toFixed(2)} (${usd(xAll * PX.AERO)})`;
   $('#vShare').textContent = '$' + SHARE_PRICE.toFixed(5);
   const chip = $('#rangeChip'); chip.textContent = ir ? 'In range' : 'Out of range'; chip.classList.toggle('out', !ir);
-  $('#tip').textContent = ir ? 'In range · earning fees' : 'Out of range · auto-rebalancing';
+  $('#tip').textContent = ir ? 'In range · earning AERO' : 'Out of range · earning paused';
+  const acc = $('#accru'); acc.lastChild.textContent = ir ? 'Staked · earning AERO' : 'Staked · paused out of range'; acc.classList.toggle('paused', !ir);
 });
 $('#claimBtn').addEventListener('click', () => { toast(`Demo: ${pos.xaero.toFixed(4)} xAERO claimed to your wallet. Your position keeps running.`); xClaimed += pos.xaero; pos.xaero = 0;
   $('#rClaimed').textContent = $('#tClaimed').textContent = xClaimed.toFixed(2); });
 
-/* ---------- compare: price shock ---------- */
-let cmp = null;
-function runShock() {
-  const cols = 52, rows = 17, low = 3, high = 13, p = [];
-  for (let t = 0; t < cols; t++) {
-    let v;
-    if (t < cols * 0.3) v = low + (Math.random() < 0.15 ? ri(-1, 1) : 0);
-    else if (t < cols * 0.48) v = Math.round(low + (high - low) * ((t - cols * 0.3) / (cols * 0.18))) + ri(-1, 0);
-    else v = high + (Math.random() < 0.2 ? ri(-1, 1) : 0);
-    p.push(clamp(v, 1, rows - 2));
-  }
-  const sim = (kind) => {
-    let lo = low - 1, hi = low + 1, out = 0;
-    const ir = [], L = [], H = [];
-    for (let t = 0; t < cols; t++) {
-      const x = p[t];
-      if (kind === 'auto') {
-        if ((x > hi || x < lo) && Math.random() < 0.85) { lo = x - 1; hi = x + 1; }
-        else if (x === hi && t > cols * 0.3) { lo = x - 1; hi = x + 1; }
-      } else if (kind === 'alm') {
-        out = (x > hi || x < lo) ? out + 1 : 0;
-        if (out >= 2 && t % 3 === 0) { lo = x - 1; hi = x + 1; out = 0; }
-      } else if (t === cols - 4 && (x > hi || x < lo)) { lo = x - 1; hi = x + 1; }
-      ir.push(x >= lo && x <= hi); L.push(lo); H.push(hi);
-    }
-    return { ir, L, H };
-  };
-  cmp = { p, cols, rows, t: 0, start: performance.now(), res: { manual: sim('manual'), auto: sim('auto'), alm: sim('alm') } };
-  $('#shock').disabled = true;
+/* ---------- compare: one live market, three ways to LP it ---------- */
+// A shared price walks along and makes a bigger move every 9-14 s (or on the button).
+// Each strategy keeps its own range; the stats are a rolling window over what is on screen.
+const CMP_STEP = 0.25, CMP_COLS = 52, CMP_ROWS = 17;
+const cmpViews = [];
+const cmpRes = (w, v) => ({ w, lo: v - w, hi: v + w, out: 0, ir: [], L: [], H: [] });
+const cmp = { p: [], t: 0, acc: 0, ui: 0, v: 4, target: 4, nextShock: 1e9, res: { manual: cmpRes(2, 4), auto: cmpRes(2, 4), alm: cmpRes(1, 4) } };
+function cmpShock() {
+  const up = cmp.v < CMP_ROWS / 2 ? Math.random() < 0.85 : Math.random() < 0.15;
+  cmp.target = clamp(cmp.v + (up ? 1 : -1) * ri(6, 9), 2, CMP_ROWS - 3);
+  cmp.nextShock = ri(36, 56);
 }
-function cmpStats(k, n) {
-  const r = cmp.res[k]; n = Math.max(1, n);
+function cmpStrat(k, s, x) {
+  const out = x < s.lo || x > s.hi, trend = Math.sign(cmp.target - x);
+  s.out = out ? s.out + 1 : 0;
+  let move;
+  if (k === 'auto') move = out ? Math.random() < 0.85 : trend !== 0 && x === (trend > 0 ? s.hi : s.lo);
+  else if (k === 'alm') move = s.out >= 2 && cmp.t % 3 === 0;
+  else move = s.out >= 14;
+  if (move) {
+    // Autopilot leans its new range into a move instead of re-centring on every step.
+    if (k === 'auto' && trend !== 0) { s.lo = trend > 0 ? x - 1 : x - 2 * s.w + 1; s.hi = s.lo + 2 * s.w; }
+    else { s.lo = x - s.w; s.hi = x + s.w; }
+    s.out = 0;
+  }
+  s.ir.push(x >= s.lo && x <= s.hi); s.L.push(s.lo); s.H.push(s.hi);
+}
+function cmpAdvance() {
+  if (--cmp.nextShock <= 0) cmpShock();
+  let v = cmp.v;
+  if (v !== cmp.target) v += Math.sign(cmp.target - v) * (Math.random() < 0.8 ? (Math.random() < 0.2 ? 2 : 1) : 0);
+  else if (Math.random() < 0.15) v += ri(-1, 1);
+  cmp.v = v = clamp(v, 1, CMP_ROWS - 2); cmp.t++;
+  cmp.p.push(v);
+  for (const k in cmp.res) cmpStrat(k, cmp.res[k], v);
+  if (cmp.p.length > CMP_COLS + 1) {
+    cmp.p.shift();
+    for (const r of Object.values(cmp.res)) { r.ir.shift(); r.L.shift(); r.H.shift(); }
+  }
+}
+for (let i = 0; i <= CMP_COLS; i++) cmpAdvance();
+cmp.nextShock = 10;
+function cmpStats(k) {
+  const r = cmp.res[k], n = r.ir.length - 1;           // skip the column still sliding in
   const inr = Math.round(r.ir.slice(0, n).filter(Boolean).length / n * 100);
   const moves = r.L.slice(0, n).reduce((acc, lo, i) => acc + (i && lo !== r.L[i - 1] ? 1 : 0), 0);
   return { inr, moves };
 }
+function updateCmpStats() {
+  [['manual', 'k'], ['auto', 'b'], ['alm', 'k']].forEach(([k, c]) => {
+    const s = cmpStats(k);
+    $('#st-' + k).innerHTML = `In range <span class="${c}">${s.inr}%</span> · rebalances <span class="${c}">${s.moves}</span>`;
+  });
+}
+updateCmpStats();
+function cmpTick(dt) {
+  cmp.acc += dt;
+  while (cmp.acc >= CMP_STEP) { cmp.acc -= CMP_STEP; cmpAdvance(); updateCmpStats(); }
+}
 $$('.ccv').forEach((cv) => {
   const v = register(cv, () => {
-    const ctx = begin(v);
-    if (!cmp) return;
-    const r = cmp.res[cv.dataset.strat];
-    const cell = Math.max(5, Math.floor(v.w / cmp.cols)), s = cell - 1;
-    const ox = Math.round((v.w - cmp.cols * cell) / 2), oy = Math.round((v.h - cmp.rows * cell) / 2);
-    const Y = (row) => oy + (cmp.rows - 1 - row) * cell;
-    const full = Math.floor(cmp.t), head = cmp.t - full;
+    const ctx = begin(v), r = cmp.res[cv.dataset.strat], frac = cmp.acc / CMP_STEP;
+    const cell = Math.max(5, Math.floor(v.w / CMP_COLS)), s = cell - 1;
+    const ox = Math.round((v.w - CMP_COLS * cell) / 2), oy = Math.round((v.h - CMP_ROWS * cell) / 2);
+    const X = (i) => ox + (i - 1 - frac) * cell;     // index 0 slides off the left, the newest slides in from the right
+    const Y = (row) => oy + (CMP_ROWS - 1 - row) * cell;
+    ctx.save(); ctx.beginPath(); ctx.rect(ox, 0, CMP_COLS * cell, v.h); ctx.clip();
     ctx.fillStyle = C['grid-dot'];
-    for (let i = 0; i < cmp.cols; i += 2) for (let j = 0; j < cmp.rows; j += 3) ctx.fillRect(ox + i * cell + 2, oy + j * cell + 2, 1.5, 1.5);
-    for (let i = 0; i <= Math.min(full, cmp.cols - 1); i++) {
-      const a = i < full ? 1 : head;                  // the newest column fades in instead of popping
-      if (a <= 0) continue;
-      if (i % 2 === 0) { sq(ctx, ox + i * cell, Y(r.H[i] + 1), s, C.range, 0.85 * a); sq(ctx, ox + i * cell, Y(r.L[i] - 1), s, C.range, 0.85 * a); }
+    for (let i = 0; i < cmp.p.length; i++) if ((i + cmp.t) % 2 === 0) for (let j = 0; j < CMP_ROWS; j += 3) ctx.fillRect(X(i) + 2, oy + j * cell + 2, 1.5, 1.5);
+    for (let i = 0; i < cmp.p.length; i++) {
+      const x = X(i);
+      if ((i + cmp.t) % 2 === 0) { sq(ctx, x, Y(r.H[i] + 1), s, C.range, 0.85); sq(ctx, x, Y(r.L[i] - 1), s, C.range, 0.85); }
       const pa = cmp.p[i], pb = i ? cmp.p[i - 1] : pa, col = r.ir[i] ? C.blue : C.red;
-      for (let row = Math.min(pa, pb); row <= Math.max(pa, pb); row++) sq(ctx, ox + i * cell, Y(row), s, col, a);
+      for (let row = Math.min(pa, pb); row <= Math.max(pa, pb); row++) sq(ctx, x, Y(row), s, col);
     }
-    for (let j = 0; j < cmp.rows; j += 2) sq(ctx, ox + cmp.cols * cell, oy + j * cell, 2, C.range, 0.6);
+    ctx.restore();
+    for (let j = 0; j < CMP_ROWS; j += 2) sq(ctx, ox + CMP_COLS * cell, oy + j * cell, 2, C.range, 0.6);
   });
+  cmpViews.push(v);
 });
-function updateCmpStats() {
-  const n = Math.min(cmp.cols, Math.ceil(cmp.t));
-  const m = cmpStats('manual', n), a = cmpStats('auto', n), t = cmpStats('alm', n);
-  $('#st-manual').innerHTML = `In range <span class="r">${m.inr}%</span> · costly rebalances <span class="r">${m.moves}</span>`;
-  $('#st-auto').innerHTML = `In range <span class="b">${a.inr}%</span> · value lost <span class="b">0</span>`;
-  $('#st-alm').innerHTML = `In range <span class="k">${t.inr}%</span> · costly rebalances <span class="r">${t.moves}</span>`;
-}
-$('#shock').addEventListener('click', runShock);
-new IntersectionObserver(([e], o) => { if (e.isIntersecting) { runShock(); o.disconnect(); } }, { threshold: 0.35 }).observe($('.cmp'));
+$('#shock').addEventListener('click', () => { if (Math.abs(cmp.target - cmp.v) < 2) cmpShock(); });
 
 /* ---------- how it works: a pulse travels through the steps ---------- */
 const steps = $$('.step');
@@ -1371,9 +1403,11 @@ const spView = register($('#spark'), (dt) => {
       o.s.push(clamp(last + (o.flat ? (Math.random() < 0.15 ? ri(-1, 1) : 0) : [-1, 0, 0, 1][ri(0, 3)]), 1, 8)); o.s.shift();
     });
   }
-  if (sp.hlAcc > 2.4) { sp.hlAcc = 0; sp.hl = (sp.hl + ri(1, 7)) % 8; }
-  const frac = sp.acc / SP_STEP, gap = 36, cw = (v.w - gap) / 2, ch = v.h / 4, cell = Math.max(5, Math.floor(cw / 32));
-  sp.series.forEach((o, k) => {
+  // Short canvases (mobile) show two rows of sparklines instead of four.
+  const rows = v.h < 200 ? 2 : 4, shown = rows * 2;
+  if (sp.hlAcc > 2.4) { sp.hlAcc = 0; sp.hl = (sp.hl + ri(1, shown - 1)) % shown; }
+  const frac = sp.acc / SP_STEP, gap = 36, cw = (v.w - gap) / 2, ch = v.h / rows, cell = Math.max(5, Math.floor(cw / 32));
+  sp.series.slice(0, shown).forEach((o, k) => {
     const cx = (k % 2) * (cw + gap), cy = Math.floor(k / 2) * ch + 8;
     const col = k === sp.hl ? C.blue : C.spark, Y = (val) => cy + (9 - val) * cell;
     ctx.save(); ctx.beginPath(); ctx.rect(cx, cy - cell, 32 * cell, ch); ctx.clip();
@@ -1397,11 +1431,7 @@ function frame(now) {
   let dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
   if (reduce) dt *= 0.15;
   drawSky(dt);
-  if (cmp && cmp.t < cmp.cols) {
-    cmp.t = Math.min(cmp.cols, (now - cmp.start) / 1000 * (reduce ? 40 : 16));
-    updateCmpStats();
-    if (cmp.t >= cmp.cols) $('#shock').disabled = false;
-  }
+  if (cmpViews.some((v) => v.visible)) cmpTick(dt);
   for (const v of views) if (v.visible) v.draw(dt);
   requestAnimationFrame(frame);
 }
