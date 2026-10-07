@@ -18,7 +18,7 @@ const scriptHashes = htmlFiles.flatMap((f) => {
 
 const CSP = [
   "default-src 'self'",
-  `script-src ${scriptHashes.join(' ')}`,
+  `script-src 'self' ${scriptHashes.join(' ')}`, // 'self' for assets/gate.js
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data:",
@@ -46,6 +46,7 @@ app.use((req, res, next) => {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
     'Cross-Origin-Opener-Policy': 'same-origin',
+    'X-Robots-Tag': 'noindex, nofollow', // preview only: keep it out of search engines
   });
   next();
 });
